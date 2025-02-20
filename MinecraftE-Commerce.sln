@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftE-Commerce.WebApi", "MinecraftE-Commerce\MinecraftE-Commerce.WebApi.csproj", "{62E7237F-F757-442E-AD17-FB484EC9CB36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftE-Commerce.Domain", "MinecraftE-Commerce.Domain\MinecraftE-Commerce.Domain.csproj", "{ACF50498-3A48-4CED-BFD3-9337CC37D956}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftE-Commerce.Application", "MinecraftE-Commerce.Application\MinecraftE-Commerce.Application.csproj", "{2C3BC273-555D-4B9A-B6AD-E9DD0DF87A30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftE-Commerce.Infrastructure", "MinecraftE-Commerce.Infrastructure\MinecraftE-Commerce.Infrastructure.csproj", "{262316F0-F9C2-450E-A65C-0CD81CADAA2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftE-Commerce.Tests", "MinecraftE-Commerce.Tests\MinecraftE-Commerce.Tests.csproj", "{EF28D3FA-8A17-4C19-89DC-0D74636BE71F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62E7237F-F757-442E-AD17-FB484EC9CB36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62E7237F-F757-442E-AD17-FB484EC9CB36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62E7237F-F757-442E-AD17-FB484EC9CB36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62E7237F-F757-442E-AD17-FB484EC9CB36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACF50498-3A48-4CED-BFD3-9337CC37D956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACF50498-3A48-4CED-BFD3-9337CC37D956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACF50498-3A48-4CED-BFD3-9337CC37D956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACF50498-3A48-4CED-BFD3-9337CC37D956}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C3BC273-555D-4B9A-B6AD-E9DD0DF87A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C3BC273-555D-4B9A-B6AD-E9DD0DF87A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C3BC273-555D-4B9A-B6AD-E9DD0DF87A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C3BC273-555D-4B9A-B6AD-E9DD0DF87A30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{262316F0-F9C2-450E-A65C-0CD81CADAA2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{262316F0-F9C2-450E-A65C-0CD81CADAA2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{262316F0-F9C2-450E-A65C-0CD81CADAA2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{262316F0-F9C2-450E-A65C-0CD81CADAA2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF28D3FA-8A17-4C19-89DC-0D74636BE71F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF28D3FA-8A17-4C19-89DC-0D74636BE71F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF28D3FA-8A17-4C19-89DC-0D74636BE71F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF28D3FA-8A17-4C19-89DC-0D74636BE71F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
