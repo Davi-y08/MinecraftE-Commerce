@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MinecraftE_Commerce.Domain.Models;
 
 namespace MinecraftE_Commerce.Domain.Interfaces
 {
-    internal interface IAnnoucementService
+    public interface IAnnoucementService
     {
+        Task<List<Announcement>> GetAllAnnouncements();
+        Task<Announcement> GetAnnouncementById(int id);
+        Task<Announcement> CreateAnnouncements(Announcement annModel);
+        Task<Announcement> EditAnnouncemenet(Announcement annModel, int id);
+        Task<Announcement> DeleteAnnouncement(int id);
     }
 }

@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MinecraftE_Commerce.Domain.Models;
 
 namespace MinecraftE_Commerce.Domain.Interfaces
 {
-    internal interface IUserService
+    public interface IUserService
     {
+        Task<List<User>> GetAllUsers();
+        Task<User> GetUserById(int id);
+        Task<User> RegistrationUser(User userModel);
+        Task<User> ChangeEmail(string email);
+        Task<User> ChangePassword(string password);
+        Task<User> ChangePfp(string pfp);
+        Task<User> DeleteUser(int id);
+        
     }
 }

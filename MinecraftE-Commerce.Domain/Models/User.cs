@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace MinecraftE_Commerce.Domain.Models
 {
-    internal class User
+    public class User : IdentityUser
     {
+        public List<Announcement>? Announcements { get; set; } = new List<Announcement>();
+        public string Pfp { get; set; } = string.Empty;
     }
 }

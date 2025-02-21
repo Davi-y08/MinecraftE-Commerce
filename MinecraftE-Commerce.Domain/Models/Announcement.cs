@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MinecraftE_Commerce.Domain.Models
+﻿namespace MinecraftE_Commerce.Domain.Models
 {
-    internal class Announcement
+    public class Announcement
     {
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Descripton { get; set; } = string.Empty;
+        public string ImageAnnouncement { get; set; } = string.Empty;
+        public User? User { get; set; }
+        public string UserId { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;    
     }
 }
