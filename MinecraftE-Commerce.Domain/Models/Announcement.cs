@@ -6,6 +6,7 @@
         public string Title { get; set; } = string.Empty;
         public string Descripton { get; set; } = string.Empty;
         public string ImageAnnouncement { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public User? User { get; set; }
         public string UserId { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;    
