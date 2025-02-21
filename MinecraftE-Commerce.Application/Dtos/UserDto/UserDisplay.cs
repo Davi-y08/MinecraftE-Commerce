@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MinecraftE_Commerce.Application.Dtos.UserDto
+﻿namespace MinecraftE_Commerce.Application.Dtos.UserDto
 {
-    internal class UserDisplay
+    public class UserDisplay
     {
+        public string UserName { get; set; } = string.Empty;
+        public string Pfp { get; set; } = string.Empty;
     }
 }

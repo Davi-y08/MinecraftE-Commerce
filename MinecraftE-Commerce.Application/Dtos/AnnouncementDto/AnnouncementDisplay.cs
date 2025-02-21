@@ -1,0 +1,11 @@
+﻿namespace MinecraftE_Commerce.Application.Dtos.AnnouncementDto
+{
+    public  class AnnouncementDisplay
+    {
+        public string Title { get; set; } = string.Empty;
+        public string? Description { get; set; }
+        public decimal PriceService { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string ImageAnnouncement { get; set; } = string.Empty;
+    }
+}

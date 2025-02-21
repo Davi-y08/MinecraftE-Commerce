@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mappers\" />
+    <Folder Include="Mappers\UserMapper\" />
   </ItemGroup>
 
   <ItemGroup>
