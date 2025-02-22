@@ -8,7 +8,7 @@ namespace MinecraftE_Commerce.Infrastructure.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { } 
 
-        DbSet<Announcement> Announcements { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

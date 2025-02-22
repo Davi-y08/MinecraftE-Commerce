@@ -11,6 +11,6 @@ namespace MinecraftE_Commerce.Domain.Interfaces
         Task<User> ChangePassword(string password);
         Task<User> ChangePfp(string pfp);
         Task<User> DeleteUser(int id);
-        
+        Task<List<Announcement>> SearchAnnouncement(int id_user);
     }
 }

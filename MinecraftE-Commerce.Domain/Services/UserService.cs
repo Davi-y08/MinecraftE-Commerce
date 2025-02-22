@@ -50,5 +50,11 @@ namespace MinecraftE_Commerce.Domain.Services
             var userPassword = password;
             return await _userService.ChangePassword(userPassword);
         }
+
+        public async Task<List<Announcement>> SearchAnnouncement(int id_user)
+        {
+            var search = _userService.SearchAnnouncement(id_user);
+            return await search;
+        }
     }
 }

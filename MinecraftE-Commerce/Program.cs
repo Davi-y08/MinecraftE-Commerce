@@ -1,15 +1,28 @@
+using Microsoft.EntityFrameworkCore;
+using MinecraftE_Commerce.Domain.Interfaces;
+using MinecraftE_Commerce.Infrastructure.Data;
+using MinecraftE_Commerce.Infrastructure.Repositories;
+using MinecraftE_Commerce.Infrastructure.Services.TokenServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IAnnoucementService, AnnouncementRepo>();
+builder.Services.AddScoped<ITokenService, GenerateTokenJwt>();
+
+var ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
