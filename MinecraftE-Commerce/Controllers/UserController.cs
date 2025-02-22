@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using MinecraftE_Commerce.Application.Dtos.UserDto;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
+using MinecraftE_Commerce.Infrastructure.Data;
 using MinecraftE_Commerce.ModelView;
+using MinecraftE_Commerce.Application.Mappers.UserMapper;
 
 namespace MinecraftE_Commerce.Controllers
 {
@@ -15,12 +17,14 @@ namespace MinecraftE_Commerce.Controllers
         private readonly SignInManager<User>? _InManger;
         private readonly UserManager<User>? _userManager;
         private readonly ITokenService _tokenService;
+        private readonly AppDbContext _context;
 
-        public UserController(SignInManager<User>? inManger, UserManager<User>? userManager, ITokenService tokenService)
+        public UserController(SignInManager<User>? inManger, UserManager<User>? userManager, ITokenService tokenService, AppDbContext context)
         {
             _InManger = inManger;
             _userManager = userManager;
             _tokenService = tokenService;
+            _context = context;
         }
 
         [HttpPost("Register")]
@@ -44,13 +48,12 @@ namespace MinecraftE_Commerce.Controllers
                     await pfp.CopyToAsync(stream);
                 }
 
-                user.Pfp = $"{pathPfp}/{fileName}";
-
                 var createUser = await _userManager!.CreateAsync(user, userDto.Password);
 
                 if (createUser.Succeeded)
                 {
                     var tokenGenerate = _tokenService.CreateToken(user);
+                    user.Pfp = $"{pathPfp}/{fileName}";
                     return Ok(new TokenGenerateModelView(tokenGenerate));
                 }
 
@@ -63,16 +66,11 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody]UserForLogin loginDto)
+        public async Task<IActionResult> Login([FromForm]UserForLogin loginDto)
         {
-            var user = new User();
-            user.Email = loginDto.EmailForLogin;
+            var user = await _userManager!.Users.FirstOrDefaultAsync(x => x.Email == loginDto.EmailForLogin);
 
-            var searchEmail = await _userManager!.Users.FirstOrDefaultAsync(
-                x => x.Email == user.Email
-                );
-
-            if (searchEmail == null)
+            if (user == null)
             {
                 string message = "User not found";
                 return BadRequest(new NoAuthorizedModelView(message));
@@ -82,7 +80,7 @@ namespace MinecraftE_Commerce.Controllers
 
             if (responseLogin.Succeeded)
             {
-                var token = _tokenService.CreateToken(searchEmail);
+                var token = _tokenService.CreateToken(user);
                 var pfp = user.Pfp;
                 return Ok(new LoginSucessModelView(pfp, token));
             }
@@ -90,5 +88,35 @@ namespace MinecraftE_Commerce.Controllers
             string not = "not authorized";
             return BadRequest(new NoAuthorizedModelView(not));
         }
+
+        [HttpGet("GetByName")]
+        public async Task<IActionResult> GetUserByName([FromQuery] GetUserByname userDto)
+        {
+            var userName = userDto.UserName;
+
+            if (userName == null)
+            {
+                return BadRequest("");
+            }
+
+            var findUser = await _userManager!.FindByNameAsync(userName);
+
+            if (findUser == null)
+            {
+                string userNotFound = "User not found";
+                return BadRequest(new UserNotFound(userNotFound));
+            }
+
+            return Ok(findUser);
+        }
+
+        [HttpGet("GetAllUsers")]
+        
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+
+            return Ok(users);
+        } 
     }
 }
