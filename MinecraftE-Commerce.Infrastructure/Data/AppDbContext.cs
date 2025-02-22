@@ -1,0 +1,27 @@
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using MinecraftE_Commerce.Domain.Models;
+
+namespace MinecraftE_Commerce.Infrastructure.Data
+{
+    public class AppDbContext : IdentityDbContext<User>
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { } 
+
+        DbSet<Announcement> Announcements { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Announcement>()
+                .HasOne(p => p.User)
+                .WithMany(p => p.Announcements)
+                .HasForeignKey(p => p.User)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+        }
+    }
+}
