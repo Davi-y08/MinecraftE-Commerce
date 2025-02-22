@@ -18,10 +18,8 @@ namespace MinecraftE_Commerce.Infrastructure.Data
             builder.Entity<Announcement>()
                 .HasOne(p => p.User)
                 .WithMany(p => p.Announcements)
-                .HasForeignKey(p => p.User)
+                .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-
         }
     }
 }
