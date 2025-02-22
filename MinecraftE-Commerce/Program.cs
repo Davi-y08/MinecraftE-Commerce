@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
 using MinecraftE_Commerce.Infrastructure.Data;
@@ -24,7 +25,6 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = true;
 }).AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddAuthentication(options =>
@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(options =>
 {
     var issuer = builder.Configuration["JWT:Issuer"];
     var audience = builder.Configuration["JWT:Audience"];
-    var key = builder.Configuration["JWT: Key"];
+    var key = builder.Configuration["JWT:Key"];
 
     if (issuer == null || audience == null || key == null)
     {
@@ -61,6 +61,34 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
+});
+
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
 });
 
 var app = builder.Build();

@@ -21,4 +21,8 @@
     <ProjectReference Include="..\MinecraftE-Commerce.Infrastructure\MinecraftE-Commerce.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pfps\" />
+  </ItemGroup>
+
 </Project>

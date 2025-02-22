@@ -9,5 +9,7 @@ namespace MinecraftE_Commerce.Application.Dtos.UserDto
 
         [Required(ErrorMessage = "Password is required for login")]
         public string PasswordForLogin { get; set; } = string.Empty;
+
+        public string ConfirmedPassword { get; set; } = string.Empty;
     }
 }
