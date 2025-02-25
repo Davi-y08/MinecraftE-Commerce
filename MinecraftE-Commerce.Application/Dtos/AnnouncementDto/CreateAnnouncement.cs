@@ -13,7 +13,6 @@ namespace MinecraftE_Commerce.Application.Dtos.AnnouncementDto
 
         [Required(ErrorMessage = "Image Announcement is required")]
         public required IFormFile ImageAnnouncement { get; set; }
-
         public decimal PriceService { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

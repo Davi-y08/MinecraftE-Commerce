@@ -6,7 +6,6 @@ using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
 using MinecraftE_Commerce.Infrastructure.Data;
 using MinecraftE_Commerce.ModelView;
-using MinecraftE_Commerce.Application.Mappers.UserMapper;
 
 namespace MinecraftE_Commerce.Controllers
 {

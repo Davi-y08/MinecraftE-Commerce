@@ -10,6 +10,7 @@
         public decimal PriceService { get; set; }
         public User? User { get; set; }
         public string UserId { get; set; } = string.Empty;
-        public string UserName { get; set; } = string.Empty;    
+        public string UserName { get; set; } = string.Empty;
+        public string UserPfp { get; set; } = string.Empty;
     }
 }
