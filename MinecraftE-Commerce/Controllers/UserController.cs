@@ -53,7 +53,9 @@ namespace MinecraftE_Commerce.Controllers
                 {
                     var tokenGenerate = _tokenService.CreateToken(user);
                     user.Pfp = $"{pathPfp}/{fileName}";
-                    return Ok(new TokenGenerateModelView(tokenGenerate));
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                    return Ok(new TokenGenerateModelView(tokenGenerate, user.Pfp));
                 }
 
                 else return BadRequest(createUser.Errors);
