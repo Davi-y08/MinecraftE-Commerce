@@ -14,6 +14,7 @@ namespace MinecraftE_Commerce.Application.Dtos.AnnouncementDto
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public decimal PriceService { get; set; }
-        public required IFormFile ImageAnnouncement { get; set; }
+        public IFormFile? ImageAnnouncement { get; set; } = null;
+        public string SameImage { get; set; } = string.Empty;
     }
 }

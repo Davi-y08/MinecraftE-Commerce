@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MinecraftE_Commerce.Application.Dtos.AnnouncementDto;
 using MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
+using MinecraftE_Commerce.Infra.Services;
 using MinecraftE_Commerce.Infrastructure.Data;
+using MinecraftE_Commerce.ModelView;
 
 namespace MinecraftE_Commerce.Controllers
 {
@@ -21,27 +22,27 @@ namespace MinecraftE_Commerce.Controllers
         private readonly IAnnoucementService _annService;
         private readonly UserManager<User> _userService;
         private readonly AppDbContext _context;
+        private readonly IMailService _mailSender;
 
-        public AnnouncementController(IAnnoucementService annService, UserManager<User> userService, AppDbContext context)
+        public AnnouncementController(IAnnoucementService annService, UserManager<User> userService, AppDbContext context, IMailService mailSender)
         {
             _annService = annService;
             _context = context; 
             _userService = userService;
+            _mailSender = mailSender;
         }
 
         [HttpGet("{id:int}")]
 
         public async Task<IActionResult> GetAnnById(int id)
         {
-            if (id == null)
-            return BadRequest("Id not found");
+          if (id == null)
+          return BadRequest("Id not found");
 
           var search =  await _annService.GetAnnouncementById(id);
           var searchDto = search.MapToDisplay();
 
           if (search == null) return NotFound("Announcement not found");
-
-          
 
           return Ok(searchDto);
         }
@@ -64,8 +65,6 @@ namespace MinecraftE_Commerce.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!User.Identity!.IsAuthenticated) return Unauthorized("user dont auth");
-
             var image = createDto.ImageAnnouncement;
             string pathImageAnn = "C:\\Users\\oisyz\\source\\repos\\MinecraftE-Commerce\\MinecraftE-Commerce\\ImagesAnnouncements\\";
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);   
@@ -76,8 +75,7 @@ namespace MinecraftE_Commerce.Controllers
                 await image.CopyToAsync(stream);
             }
 
-             string? username = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-
+            string? username = User.FindFirstValue(JwtRegisteredClaimNames.Name);
             if(username == null) return NotFound("User not found");
 
             var user = await _userService.FindByNameAsync(username);
@@ -90,7 +88,7 @@ namespace MinecraftE_Commerce.Controllers
             {
                 return NotFound("pfp not found");
             }
-
+       
             var annModel = createDto.MapToCreateAnnouncement();
             annModel.UserId = user.Id.ToString();
 
@@ -105,7 +103,7 @@ namespace MinecraftE_Commerce.Controllers
      
             await _annService.CreateAnnouncements(annModel);
 
-            return Ok("Criado com sucesso");
+            return Ok();
             
         }
 
@@ -124,5 +122,68 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok(await announcements.ToListAsync());
         }
+
+        [HttpDelete]
+
+        public async Task<IActionResult> DeleteAnnouncement(int id)
+        {
+            var announcementDel = await _annService.DeleteAnnouncement(id);
+
+            if (announcementDel == null)
+            {
+                return NotFound("Nao foi encontrado");
+            }
+
+            return Ok(announcementDel);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> EditAnnouncement([FromForm] EditAnnouncement annDto, int idAnnouncement)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await _userService.FindByNameAsync(userName!);
+            string userId = user!.Id;
+            var verifyAnnouncent = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == idAnnouncement);
+            string beforeImage = verifyAnnouncent!.ImageAnnouncement;
+            var idUserInAnnouncement = verifyAnnouncent!.UserId;
+
+            if (userId != idUserInAnnouncement)
+            {
+                return Forbid();
+            }
+
+            var modelAnn = annDto.MapToEditAnnouncement();
+            modelAnn.Title = annDto.Title;
+            modelAnn.Descripton = annDto.Description;
+            modelAnn.PriceService = annDto.PriceService;
+
+            if (annDto.ImageAnnouncement != null)
+            {
+                var newImage = annDto.ImageAnnouncement;
+                string pathImageTo = "C:\\Users\\oisyz\\source\\repos\\MinecraftE-Commerce\\MinecraftE-Commerce\\ImagesAnnouncements\\";
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(newImage!.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), pathImageTo, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await newImage.CopyToAsync(stream);
+                }
+
+                modelAnn.ImageAnnouncement = Path.Combine("ImagesAnnouncements", fileName);
+            }
+
+            else
+            {
+                modelAnn.ImageAnnouncement = verifyAnnouncent.ImageAnnouncement;
+            }
+
+            await _annService.EditAnnouncemenet(modelAnn, idAnnouncement);
+
+            return Ok();
+        }
+        
     }
 }

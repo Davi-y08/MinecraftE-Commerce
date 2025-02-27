@@ -1,4 +1,6 @@
-﻿namespace MinecraftE_Commerce.Domain.Models
+﻿using System.Text.Json.Serialization;
+
+namespace MinecraftE_Commerce.Domain.Models
 {
     public class Announcement
     {
@@ -8,6 +10,8 @@
         public string ImageAnnouncement { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public decimal PriceService { get; set; }
+
+        [JsonIgnore]
         public User? UserInfo { get; set; }
         public string UserId { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
