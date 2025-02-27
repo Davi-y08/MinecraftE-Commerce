@@ -17,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAnnoucementService, AnnouncementRepo>();
 builder.Services.AddScoped<ITokenService, GenerateTokenJwt>();

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MinecraftE_Commerce.Application.Dtos.AnnouncementDto;
 using MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper;
 using MinecraftE_Commerce.Domain.Interfaces;
@@ -19,16 +20,18 @@ namespace MinecraftE_Commerce.Controllers
     [Route("api/v1")]
     public class AnnouncementController : ControllerBase
     {
+        private readonly IMemoryCache _memCache;
         private readonly IAnnoucementService _annService;
         private readonly UserManager<User> _userService;
         private readonly AppDbContext _context;
         private readonly IMailService _mailSender;
 
-        public AnnouncementController(IAnnoucementService annService, UserManager<User> userService, AppDbContext context, IMailService mailSender)
+        public AnnouncementController(IAnnoucementService annService, UserManager<User> userService, AppDbContext context, IMailService mailSender, IMemoryCache memCache)
         {
             _annService = annService;
             _context = context; 
             _userService = userService;
+            _memCache = memCache;
             _mailSender = mailSender;
         }
 
@@ -51,12 +54,20 @@ namespace MinecraftE_Commerce.Controllers
 
         public async Task<IActionResult> GetAllAnnouncement()
         {
-            var announcements = await _annService.GetAllAnnouncements();
+            List<Announcement> announcements = null!;
+           
+            if (!_memCache.TryGetValue("all_announcements", out announcements))
+            {
+                 announcements = await _context.Announcements.ToListAsync();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromDays(365));
+
+                _memCache.Set("all_announcements", announcements, cacheEntryOptions);
+            }
 
             return Ok(announcements);
         }
-
-        [HttpGet]
 
         [Authorize]
         [HttpPost]
@@ -184,6 +195,5 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok();
         }
-        
     }
 }
