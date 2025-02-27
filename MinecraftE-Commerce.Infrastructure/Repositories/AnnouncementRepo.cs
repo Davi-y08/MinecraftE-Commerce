@@ -59,7 +59,7 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
 
         public async Task<Announcement> GetAnnouncementById(int id)
         {
-            var search = await _context.Announcements.FindAsync(id);
+            var search = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == id);
             if (search == null) return null!;
             return search;
         }

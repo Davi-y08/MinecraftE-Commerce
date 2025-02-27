@@ -102,6 +102,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseStaticFiles();
@@ -118,7 +120,6 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/ImagesAnnouncements"
 });
 
-app.UseAuthentication();
 
 app.MapControllers();
 

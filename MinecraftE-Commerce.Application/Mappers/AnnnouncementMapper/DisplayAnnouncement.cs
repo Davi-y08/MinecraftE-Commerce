@@ -5,7 +5,7 @@ namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
 {
     public static class DisplayAnnouncement
     {
-        public static AnnouncementDisplay MapToDisplay(Announcement addModel)
+        public static AnnouncementDisplay MapToDisplay(this Announcement addModel)
         {
             return new AnnouncementDisplay
             {
@@ -14,6 +14,8 @@ namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
                 PriceService = addModel.PriceService,
                 ImageAnnouncement = addModel.ImageAnnouncement,
                 CreatedAt = addModel.CreatedAt,
+                UserName = addModel.UserName,
+                UserPfp = addModel.UserPfp,
             };
         }
     }

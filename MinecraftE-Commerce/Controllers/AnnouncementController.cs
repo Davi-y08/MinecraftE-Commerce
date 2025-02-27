@@ -1,12 +1,16 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Formats.Asn1;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MinecraftE_Commerce.Application.Dtos.AnnouncementDto;
 using MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
+using MinecraftE_Commerce.Infrastructure.Data;
 
 namespace MinecraftE_Commerce.Controllers
 {
@@ -16,11 +20,30 @@ namespace MinecraftE_Commerce.Controllers
     {
         private readonly IAnnoucementService _annService;
         private readonly UserManager<User> _userService;
+        private readonly AppDbContext _context;
 
-        public AnnouncementController(IAnnoucementService annService, UserManager<User> userService)
+        public AnnouncementController(IAnnoucementService annService, UserManager<User> userService, AppDbContext context)
         {
             _annService = annService;
+            _context = context; 
             _userService = userService;
+        }
+
+        [HttpGet("{id:int}")]
+
+        public async Task<IActionResult> GetAnnById(int id)
+        {
+            if (id == null)
+            return BadRequest("Id not found");
+
+          var search =  await _annService.GetAnnouncementById(id);
+          var searchDto = search.MapToDisplay();
+
+          if (search == null) return NotFound("Announcement not found");
+
+          
+
+          return Ok(searchDto);
         }
 
         [HttpGet("GetAll")]
@@ -31,6 +54,8 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok(announcements);
         }
+
+        [HttpGet]
 
         [Authorize]
         [HttpPost]
@@ -82,6 +107,22 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok("Criado com sucesso");
             
+        }
+
+        [HttpGet("SearchAn")]
+
+        public async Task<IActionResult> SearchAnnouncement(string strSearch)
+        {
+            if (strSearch == null) return BadRequest("The string is empty");
+
+            var announcements = from a in _context.Announcements select a;
+
+            if (!String.IsNullOrEmpty(strSearch))
+            {
+                announcements = announcements.Where(s => s.Title!.ToLower().Contains(strSearch.ToLower()));
+            }
+
+            return Ok(await announcements.ToListAsync());
         }
     }
 }
