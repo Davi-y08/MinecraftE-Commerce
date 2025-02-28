@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MinecraftE_Commerce.Application.Dtos.UserDto;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
@@ -18,16 +20,18 @@ namespace MinecraftE_Commerce.Controllers
     public class UserController : ControllerBase
     {
         private readonly SignInManager<User>? _InManger;
+        private readonly IMemoryCache _memCache;
         private readonly UserManager<User>? _userManager;
         private readonly ITokenService _tokenService;
         private readonly AppDbContext _context;
 
-        public UserController(SignInManager<User>? inManger, UserManager<User>? userManager, ITokenService tokenService, AppDbContext context)
+        public UserController(SignInManager<User>? inManger, UserManager<User>? userManager, ITokenService tokenService, AppDbContext context, IMemoryCache memCache)
         {
             _InManger = inManger;
             _userManager = userManager;
             _tokenService = tokenService;
             _context = context;
+            _memCache = memCache;
         }
 
         [HttpPost("Register")]
@@ -119,7 +123,18 @@ namespace MinecraftE_Commerce.Controllers
 
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _context.Users.ToListAsync();
+            List<User> users = new List<User>();
+
+
+            if (!_memCache.TryGetValue("users", out users!))
+            {
+                users = await _context.Users.ToListAsync();
+
+                var memCacheOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromDays(365));
+
+                _memCache.Set("users", users);
+            }
 
             return Ok(users);
         }
