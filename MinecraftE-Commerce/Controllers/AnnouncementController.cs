@@ -39,15 +39,29 @@ namespace MinecraftE_Commerce.Controllers
 
         public async Task<IActionResult> GetAnnById(int id)
         {
-          if (id == null)
-          return BadRequest("Id not found");
+            //if (id == null)
+            //return BadRequest("Id not found");
 
-          var search =  await _annService.GetAnnouncementById(id);
-          var searchDto = search.MapToDisplay();
+            //var search =  await _annService.GetAnnouncementById(id);
+            //var searchDto = search.MapToDisplay();
 
-          if (search == null) return NotFound("Announcement not found");
+            //if (search == null) return NotFound("Announcement not found");
 
-          return Ok(searchDto);
+            //return Ok(searchDto);
+
+            var announcement = await _annService.GetAnnouncementById(id);
+
+            if (!_memCache.TryGetValue("announcement", out announcement))
+            {
+                announcement = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == id);
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromDays(365));
+
+                _memCache.Set("announcement", cacheEntryOptions);
+            }
+
+            return Ok(announcement);
         }
 
         [HttpGet("GetAll")]
@@ -70,7 +84,7 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("CreateAdd")]
         public async Task<IActionResult> CreateAnnouncement([FromForm] CreateAnnouncement createDto)
         {
             if(!ModelState.IsValid)
