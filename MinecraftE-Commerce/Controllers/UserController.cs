@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MinecraftE_Commerce.Application.Dtos.UserDto;
@@ -28,7 +32,7 @@ namespace MinecraftE_Commerce.Controllers
 
         [HttpPost("Register")]
 
-        public async Task<IActionResult> RegisterUser([FromForm]CreateUser userDto)
+        public async Task<IActionResult> RegisterUser([FromForm] CreateUser userDto)
         {
             try
             {
@@ -67,7 +71,7 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromForm]UserForLogin loginDto)
+        public async Task<IActionResult> Login([FromForm] UserForLogin loginDto)
         {
             var user = await _userManager!.Users.FirstOrDefaultAsync(x => x.Email == loginDto.EmailForLogin);
 
@@ -112,12 +116,30 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [HttpGet("GetAllUsers")]
-        
+
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _context.Users.ToListAsync();
 
             return Ok(users);
-        } 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser([FromQuery] string id)
+        {
+
+            var user = await _userManager!.FindByIdAsync(id);
+
+            try
+            {
+                await _userManager.DeleteAsync(user!);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+
+            return Ok();
+        }
     }
 }
