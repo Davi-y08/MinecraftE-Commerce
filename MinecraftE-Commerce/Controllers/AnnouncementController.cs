@@ -115,8 +115,12 @@ namespace MinecraftE_Commerce.Controllers
             annModel.UserName = username;
             annModel.UserPfp = userPfp;
             annModel.ImageAnnouncement = $"{pathImageAnn}/{fileName}";
-     
-            await _annService.CreateAnnouncements(annModel);
+
+            //await _annService.CreateAnnouncements(annModel);
+
+           
+                await _annService.CreateAnnouncements(annModel);
+            
 
             return Ok();
             

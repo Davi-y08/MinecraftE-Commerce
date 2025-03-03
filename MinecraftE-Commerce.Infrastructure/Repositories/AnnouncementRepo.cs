@@ -16,8 +16,10 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
 
         public async Task<Announcement> CreateAnnouncements(Announcement annModel)
         {
-            await _context.Announcements.AddAsync(annModel);
-            await _context.SaveChangesAsync();
+
+                await _context.Announcements.AddAsync(annModel);
+                await _context.SaveChangesAsync();
+            
             return annModel;
         }
 
