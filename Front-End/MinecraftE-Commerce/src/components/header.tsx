@@ -1,6 +1,12 @@
-
+import { useNavigate } from "react-router-dom";
 
 function HeaderMain(){
+    const navigate = useNavigate();
+
+    async function loginPage() {
+        navigate('/login');
+    }
+
     return(
         <div>
             <label htmlFor="inpSearch"><img src=""/>
@@ -15,7 +21,7 @@ function HeaderMain(){
             </div>
 
             <div className="menuUser">
-                <img src="pfp" className="pfpUser"/>
+                <img onClick={loginPage} src="pfp" className="pfpUser"/>
             </div>
         </div>  
     )

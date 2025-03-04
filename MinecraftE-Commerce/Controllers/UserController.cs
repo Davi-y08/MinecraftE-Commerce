@@ -70,7 +70,7 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromForm] UserForLogin loginDto)
+        public async Task<IActionResult> Login([FromBody] UserForLogin loginDto)
         {
             var user = await _userManager!.Users.FirstOrDefaultAsync(x => x.Email == loginDto.EmailForLogin);
 

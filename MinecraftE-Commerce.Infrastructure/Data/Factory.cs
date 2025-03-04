@@ -8,8 +8,8 @@ namespace MinecraftE_Commerce.Infrastructure.Data
         public AppDbContext CreateDbContext(string[] args)
         {
             var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionBuilder.UseMySql("Server=localhost;User=root;Password=eltinho123;Database=bd_ecommerce"
-                , ServerVersion.AutoDetect("Server=localhost;User=root;Password=eltinho123;Database=bd_ecommerce"));
+            optionBuilder.UseMySql("Server=localhost;User=root;Password=eltinho123;Database=bd_myminecraft"
+                , ServerVersion.AutoDetect("Server=localhost;User=root;Password=eltinho123;Database=bd_myminecraft"));
 
             return new AppDbContext(optionBuilder.Options);
         }
