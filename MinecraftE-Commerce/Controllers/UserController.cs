@@ -41,9 +41,8 @@ namespace MinecraftE_Commerce.Controllers
                 var user = new User { UserName = userDto.UserName, Email = userDto.Email };
 
                 var pfp = userDto.Pfp;
-                string pathPfp = "C:\\Users\\oisyz\\source\\repos\\MinecraftE-Commerce\\MinecraftE-Commerce\\Pfps\\";
                 var fileName = Guid.NewGuid().ToString() + Path.GetExtension(pfp.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), pathPfp, fileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Pfps", fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -55,7 +54,7 @@ namespace MinecraftE_Commerce.Controllers
                 if (createUser.Succeeded)
                 {
                     var tokenGenerate = _tokenService.CreateToken(user);
-                    user.Pfp = $"{pathPfp}/{fileName}";
+                    user.Pfp = $"Pfps/{fileName}";
                     _context.Users.Update(user);
                     await _context.SaveChangesAsync();
                     return Ok(new TokenGenerateModelView(tokenGenerate, user.Pfp));

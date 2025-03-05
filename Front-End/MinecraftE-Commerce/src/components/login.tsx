@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import { data } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login(){
     const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState("");
     const [token, setToken] = useState('');
+    const navigate = useNavigate();
 
     const fetchData = async ({ email, password }: { email: string, password: string }) => {
         const response = await fetch("https://localhost:7253/api/v1/Login", {
@@ -20,10 +21,16 @@ function Login(){
             }),
         });
         
-        const data = await response.json();
-        setToken(data.token);
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('pfp', data.pfp);
+    const data = await response.json();
+    setToken(data.token);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('pfp', data.pfp);
+
+    if (response.ok) {
+        navigate('/');
+    }
+
+       
     }
 
     const handleSubmit = (e: any) => {
