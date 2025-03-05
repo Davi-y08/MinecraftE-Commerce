@@ -2,6 +2,7 @@ import Login from "./components/login";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import HomeMain from "./components/header";
+import AnnouncementPage from "./components/announcement";
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element = {<HomeMain></HomeMain>} />
           <Route path="/login" element = {<Login></Login>}/>
+          <Route path="/announcements/:id" element = {<AnnouncementPage/>}/>
         </Routes>
       </Router>
       </QueryClientProvider>

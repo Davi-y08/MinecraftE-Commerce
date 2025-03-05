@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useQueries, useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import AnnouncementPage from "./announcement";
 
 function HomeMain(){
     const navigate = useNavigate();
@@ -56,6 +56,10 @@ function HomeMain(){
             console.log(announcements);
         }, [announcements])
     }       
+
+    function redirect(idAnnouncement: number){   
+        navigate(`/announcements/${idAnnouncement}`);
+    }
     
     return(
         <div>
@@ -67,6 +71,7 @@ function HomeMain(){
                 <a href="#">My announcements</a>
                 <a href="#">About</a>
                 <a href="#">Terms of use</a>
+                <a href="https://github.com/Davi-y08/MinecraftE-Commerce">Project</a>
             </div>
 
             <div className="menuUser">
@@ -78,13 +83,15 @@ function HomeMain(){
 
             <div className="contentSite">
                     {announcements?.map((announcement: Announcement) => (
-                        <div className="cardAnnouncement" key={announcement.id}>
-                            <img width={50} src={`https://localhost:7253/${announcement.imageAnnouncement}`}/>
-                            <p>{announcement.title}</p>
-                            <p>{announcement.descripton}</p>
-                            <small>{announcement.priceService}</small>
+                        <div onClick={() => redirect(announcement.id)} className="cardAnnouncement" key={announcement.id}>
+                            <img className="imageadd" width={50} src={`https://localhost:7253/${announcement.imageAnnouncement}`}/>
+                            <p className="username">{announcement.userName}</p>
+                            <p className="title">{announcement.title}</p>
+                            <img className="userpfp" width={20} src={`https://localhost:7253/${announcement.userPfp}`}/>
+                            <p className="description">{announcement.descripton}</p>
+                            <small className="price">{announcement.priceService}</small>
                             <br />
-                            <small>{announcement.createdAt}</small>
+                            <small className="datetime">{announcement.createdAt}</small>
                         </div>
                     ))}
             </div>
