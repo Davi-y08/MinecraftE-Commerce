@@ -58,18 +58,7 @@ namespace MinecraftE_Commerce.Controllers
 
         public async Task<IActionResult> GetAllAnnouncement()
         {
-            List<Announcement> announcements = null!;
-           
-            if (!_memCache.TryGetValue("all_announcements", out announcements))
-            {
-                 announcements = await _context.Announcements.ToListAsync();
-
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromDays(365));
-
-                _memCache.Set("all_announcements", announcements, cacheEntryOptions);
-            }
-
+            var announcements = await _annService.GetAllAnnouncements();
             return Ok(announcements);
         }
 
@@ -81,9 +70,8 @@ namespace MinecraftE_Commerce.Controllers
                 return BadRequest(ModelState);
 
             var image = createDto.ImageAnnouncement;
-            string pathImageAnn = "C:\\Users\\oisyz\\source\\repos\\MinecraftE-Commerce\\MinecraftE-Commerce\\ImagesAnnouncements\\";
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);   
-            var filepath = Path.Combine(Directory.GetCurrentDirectory(), pathImageAnn, fileName);
+            var filepath = Path.Combine(Directory.GetCurrentDirectory(), "ImagesAnnouncements", fileName);
 
             using (var stream = new FileStream(filepath, FileMode.Create))
             {
@@ -114,7 +102,7 @@ namespace MinecraftE_Commerce.Controllers
 
             annModel.UserName = username;
             annModel.UserPfp = userPfp;
-            annModel.ImageAnnouncement = $"{pathImageAnn}/{fileName}";
+            annModel.ImageAnnouncement = $"ImagesAnnouncements/{fileName}";
 
             //await _annService.CreateAnnouncements(annModel);
 
