@@ -1,8 +1,7 @@
-import { useQuery } from "react-query";
 import axios from "axios";
-import { useFetcher, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import '../styles/card.css'
 function AnnouncementPage(){
 
     interface Announcement{

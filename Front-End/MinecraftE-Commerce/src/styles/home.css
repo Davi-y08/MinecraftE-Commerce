@@ -1,0 +1,11 @@
+.contentSite{
+    padding: 15px;
+    flex-wrap: wrap;
+    gap: 20px;
+    display: flex;
+}
+
+.cardAnnouncement{
+    background-color: gray;
+    cursor: pointer;
+}

@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AnnouncementPage from "./announcement";
-
+import '../styles/home.css'
 function HomeMain(){
     const navigate = useNavigate();
     const pfp = localStorage.getItem("pfp");
