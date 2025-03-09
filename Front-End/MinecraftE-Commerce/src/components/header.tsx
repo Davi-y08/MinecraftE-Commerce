@@ -14,6 +14,19 @@ function HomeMain(){
     if (pfp == null && token == null) {
         notLog = "SignIn/SignUp"
     }
+    
+    function verifyLog(){
+        if(token == null){
+            loginPage();
+        }
+        else{
+            userMenu();
+        }
+    }
+
+    function userMenu(){
+        console.log("user menu");
+    }
 
     async function loginPage() {
         navigate('/login');
@@ -62,7 +75,7 @@ function HomeMain(){
     
     return(
         <div>
-            <header>
+            <header className="headerHome">
             <label htmlFor="inpSearch">Pesquisar</label>
             <input id="inpSearch" type="search" placeholder={randomElement}/>
 
@@ -75,7 +88,7 @@ function HomeMain(){
 
             <div className="menuUser">
                 <p>{notLog}</p>
-                <img onClick={loginPage} src={`https://localhost:7253/${pfp}`} className="pfpUser" width={50}/>
+                <img onClick={verifyLog} src={`https://localhost:7253/${pfp}`} className="pfpUser" width={50}/>
                 <button onClick={logout}>Sair</button>
             </div>
             </header>
@@ -94,7 +107,10 @@ function HomeMain(){
                         </div>
                     ))}
             </div>
-        </div>  
+            <div className="userMenu" id="userMenu">
+                    
+            </div>
+        </div>
     )
 }
 

@@ -32,8 +32,6 @@ function AnnouncementPage(){
     returnAnn();
    }, [])
 
-
-
     return(
         <div>
             {announcementAdd && (

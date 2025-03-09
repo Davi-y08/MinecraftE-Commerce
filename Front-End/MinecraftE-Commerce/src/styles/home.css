@@ -1,3 +1,8 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
 .contentSite{
     padding: 15px;
     flex-wrap: wrap;
@@ -7,5 +12,26 @@
 
 .cardAnnouncement{
     background-color: gray;
+    cursor: pointer;
+}
+
+.headerHome{
+    width: 1918px;
+    height: 78px;
+    background-color: #D9D9D9;
+    border: solid;
+    border-width: 1px;
+    border-color: black;
+    border-bottom-right-radius: 30px;
+}
+
+.pfpUser{
+    margin-left: 1820px;
+    margin-top: -25px;
+    border-radius: 50%;
+    border: black;
+    object-fit: cover;
+    width: 55px;
+    height: 55px;
     cursor: pointer;
 }
