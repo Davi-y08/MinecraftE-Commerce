@@ -20,12 +20,40 @@ function HomeMain(){
             loginPage();
         }
         else{
-            userMenu();
+            exibirUserMenu();
         }
     }
 
-    function userMenu(){
-        console.log("user menu");
+    function exibirUserMenu(){
+        const displayMenuLateral = document.getElementById('menuLateral');
+        if (displayMenuLateral) {
+            displayMenuLateral.classList.add('show');
+        }
+    }
+
+    useEffect(() => {
+
+        const handleClick = (event: MouseEvent) => {
+            const menulateral = document.getElementById('menuLateral');
+            if (menulateral && !menulateral.contains(event.target as Node)) {
+                hideMenuLateral();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClick);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClick);
+        }
+
+    },[])
+   
+
+    function hideMenuLateral(){
+        const displayMenuLateral = document.getElementById('menuLateral');
+        if (displayMenuLateral) {
+            displayMenuLateral.classList.remove('show');
+        }
     }
 
     async function loginPage() {
@@ -72,6 +100,8 @@ function HomeMain(){
     function redirect(idAnnouncement: number){   
         navigate(`/announcements/${idAnnouncement}`);
     }
+
+
     
     return(
         <div>
@@ -88,9 +118,19 @@ function HomeMain(){
 
             <div className="menuUser">
                 <p>{notLog}</p>
-                <img onClick={verifyLog} src={`https://localhost:7253/${pfp}`} className="pfpUser" width={50}/>
+                <img id="pfpUserHead" onClick={verifyLog} src={`https://localhost:7253/${pfp}`} className="pfpUser" width={50}/>
                 <button onClick={logout}>Sair</button>
             </div>
+            
+            <div id="menuLateral" className="MenuLateral">
+                <img src={`https://localhost:7253/${pfp}`} width={45}/>
+                <button className="myProfile">My Profile</button>
+                <button className="myAds">My ads</button>
+                <button className="darkTheme">Dark theme</button>
+                <button className="configs">Configs</button>
+                <button className="createAd">Create ad</button>
+            </div>
+
             </header>
 
             <div className="contentSite">
@@ -106,9 +146,6 @@ function HomeMain(){
                             <small className="datetime">{announcement.createdAt}</small>
                         </div>
                     ))}
-            </div>
-            <div className="userMenu" id="userMenu">
-                    
             </div>
         </div>
     )

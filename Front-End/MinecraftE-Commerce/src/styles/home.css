@@ -25,13 +25,29 @@
     border-bottom-right-radius: 30px;
 }
 
-.pfpUser{
-    margin-left: 1820px;
-    margin-top: -25px;
-    border-radius: 50%;
-    border: black;
-    object-fit: cover;
-    width: 55px;
-    height: 55px;
-    cursor: pointer;
+body{
+    background-color: #FBFEFF;
+    overflow: hidden;
+}
+
+.MenuLateral {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: -100px;
+    margin-left: 1630px;
+    background-color: white;
+    width: 287px;
+    height: 305px;
+    border-bottom-left-radius: 50px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 10;
+}
+
+.MenuLateral.show {
+    opacity: 1;
+    transform: translateX(0);
 }
