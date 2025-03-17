@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import HomeMain from "./components/header";
 import AnnouncementPage from "./components/announcement";
+import CreateAnnouncementPage from "./components/createad";
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element = {<HomeMain></HomeMain>} />
           <Route path="/login" element = {<Login></Login>}/>
           <Route path="/announcements/:id" element = {<AnnouncementPage/>}/>
+          <Route path="/createad" element = {<CreateAnnouncementPage/>}/>
         </Routes>
       </Router>
       </QueryClientProvider>

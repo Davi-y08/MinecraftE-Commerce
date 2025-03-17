@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../styles/home.css'
+
 function HomeMain(){
     const navigate = useNavigate();
     const pfp = localStorage.getItem("pfp");
@@ -101,7 +102,9 @@ function HomeMain(){
         navigate(`/announcements/${idAnnouncement}`);
     }
 
-
+    function navToCreateAd(){
+        navigate('/createad');
+    }
     
     return(
         <div>
@@ -128,7 +131,7 @@ function HomeMain(){
                 <button className="myAds">My ads</button>
                 <button className="darkTheme">Dark theme</button>
                 <button className="configs">Configs</button>
-                <button className="createAd">Create ad</button>
+                <button onClick={navToCreateAd} className="createAd">Create ad</button>
             </div>
 
             </header>
