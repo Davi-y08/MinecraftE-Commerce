@@ -10,9 +10,60 @@
     display: flex;
 }
 
-.cardAnnouncement{
-    background-color: gray;
+.imageadd{
+    width: 234px;
+    height: 132px;
+    object-fit: cover;
     cursor: pointer;
+    border: solid 2px;
+}
+
+.userPfpInInfo:hover{
+    border: solid 2px;
+}
+
+.infoAnuncio{
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 400;
+    background-color: rgb(217, 217, 217, 0.5);
+    margin-top: 10px;
+    cursor: pointer;
+    max-height: 200px;
+    overflow: hidden;
+    min-height: 78px;
+}
+
+.username,
+.title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.title{
+    margin-top: -30px;
+    max-width: 200px;
+}
+
+.description{
+    font-weight: 300;
+    margin-top: 20px;
+}
+
+.userPfpInInfo{
+    object-fit: cover;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-left: 200px;
+    margin-top: 20px;
+}
+
+
+.price, .datetime {
+    font-size: 12px;
+    color: #555;
+    margin-top: 5px;
 }
 
 .headerHome{
@@ -76,7 +127,7 @@ body{
 }
 
 .inptSearch{
-    width: 380px;
+    width: 350px;
     height: 46px;
     border-radius: 5px;
     border: none;

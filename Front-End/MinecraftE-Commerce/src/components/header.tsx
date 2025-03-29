@@ -146,18 +146,23 @@ function HomeMain(){
             </div>
 
             </header>
+                
+                
 
             <div className="contentSite">
                     {announcements?.map((announcement: Announcement) => (
                         <div onClick={() => redirect(announcement.id)} className="cardAnnouncement" key={announcement.id}>
-                            <img className="imageadd" width={50} src={`https://localhost:7253/${announcement.imageAnnouncement}`}/>
-                            <p className="username">{announcement.userName}</p>
+                            <div className="divImage">
+                                <img className="imageadd" src={`https://localhost:7253/${announcement.imageAnnouncement}`}/>
+                            </div>
+                        <div className="infoAnuncio">
+                            <img className="userPfpInInfo" width={20} src={`https://localhost:7253/${announcement.userPfp}`}/>
                             <p className="title">{announcement.title}</p>
-                            <img className="userpfp" width={20} src={`https://localhost:7253/${announcement.userPfp}`}/>
                             <p className="description">{announcement.descripton}</p>
                             <small className="price">{announcement.priceService}</small>
                             <br />
-                            <small className="datetime">{announcement.createdAt}</small>
+                            <small className="datetime">{announcement.createdAt}</small>]
+                        </div>
                         </div>
                     ))}
             </div>
