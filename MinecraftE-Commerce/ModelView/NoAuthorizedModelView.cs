@@ -1,6 +1,6 @@
 ﻿namespace MinecraftE_Commerce.ModelView
 {
-    public class NoAuthorizedModelView(string noAuthorized)
+    public record class NoAuthorizedModelView(string noAuthorized)
     {
     }
 }

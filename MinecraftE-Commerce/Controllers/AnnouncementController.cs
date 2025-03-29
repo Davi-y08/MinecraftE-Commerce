@@ -103,14 +103,17 @@ namespace MinecraftE_Commerce.Controllers
             annModel.UserName = username;
             annModel.UserPfp = userPfp;
             annModel.ImageAnnouncement = $"ImagesAnnouncements/{fileName}";
-
             //await _annService.CreateAnnouncements(annModel);
 
-           
-                await _annService.CreateAnnouncements(annModel);
-            
+            var responseCreated = await _annService.CreateAnnouncements(annModel);
+            //return Ok(new TokenGenerateModelView(tokenGenerate, user.Pfp));
 
-            return Ok();
+            if (responseCreated == null)
+            {
+                return BadRequest(new CreatedAd("Erro ao criar anúncio!"));
+            }
+
+            return Ok(new CreatedAd("Anúncio criado com sucesso"));
             
         }
 

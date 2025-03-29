@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../styles/home.css'
+import lupa from '../images/lupa.png'
 
 function HomeMain(){
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ function HomeMain(){
     const randomElement = arr[randomIndex];
 
     if (pfp == null && token == null) {
-        notLog = "SignIn/SignUp"
+        notLog = "SignIn/SignUp"    
     }
     
     function verifyLog(){
@@ -105,12 +106,20 @@ function HomeMain(){
     function navToCreateAd(){
         navigate('/createad');
     }
+
+    const isLogged = token !== null;
+
     
     return(
-        <div>
+        <div className="appMain">
+
+            <head>
+            <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+            </head>
+
             <header className="headerHome">
-            <label htmlFor="inpSearch">Pesquisar</label>
-            <input id="inpSearch" type="search" placeholder={randomElement}/>
+            <input className="inptSearch" id="inpSearch" type="search" placeholder={randomElement}/>
+            <label className="lblSearch" htmlFor="inpSearch"><img width={27} height={27} src={lupa}/></label>
 
             <div className="links">
                 <a href="#">My announcements</a>
@@ -122,16 +131,18 @@ function HomeMain(){
             <div className="menuUser">
                 <p>{notLog}</p>
                 <img id="pfpUserHead" onClick={verifyLog} src={`https://localhost:7253/${pfp}`} className="pfpUser" width={50}/>
-                <button onClick={logout}>Sair</button>
             </div>
             
             <div id="menuLateral" className="MenuLateral">
-                <img src={`https://localhost:7253/${pfp}`} width={45}/>
+                <img className="pfpInMenu" src={`https://localhost:7253/${pfp}`} width={45}/>
                 <button className="myProfile">My Profile</button>
                 <button className="myAds">My ads</button>
                 <button className="darkTheme">Dark theme</button>
                 <button className="configs">Configs</button>
                 <button onClick={navToCreateAd} className="createAd">Create ad</button>
+                {
+                     isLogged && <button onClick={logout}>Sair</button>
+                }
             </div>
 
             </header>

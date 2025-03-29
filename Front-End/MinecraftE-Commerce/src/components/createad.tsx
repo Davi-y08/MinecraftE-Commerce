@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import { data } from "react-router-dom";
 
 function CreateAnnouncementPage() {
   const [title, setTitle] = useState("");
@@ -25,6 +24,11 @@ function CreateAnnouncementPage() {
         },
         body: formData,
       });
+      
+      if(response.status == 200 || 201){
+          const dataResponse = await response.json();
+          console.log("resposta: " + dataResponse);
+      }
 
     } else {
       alert("Preeencha todos os campos por favor!");
