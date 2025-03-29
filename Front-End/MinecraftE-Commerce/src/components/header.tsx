@@ -95,7 +95,7 @@ function HomeMain(){
 
     if (announcements != null) {
         useEffect(() => {
-            console.log(announcements);
+            
         }, [announcements])
     }       
 
@@ -108,7 +108,45 @@ function HomeMain(){
     }
 
     const isLogged = token !== null;
+    
+    async function pesquisarAnuncios(strSearch: string) {
+        try {
+            const responseSearch = 
+            axios.get
+            (`https://localhost:7253/api/v1/SearchAn?strSearch=${strSearch}`);
 
+            const data = await (await responseSearch).data;
+            const dataTitle = await data.title;
+
+            const list = document.getElementById('listTitlesSearch');
+
+            if(list){
+                list.innerHTML = '';
+
+                data.forEach((announcement: Announcement) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = announcement.title; // or other relevant data
+                list.appendChild(listItem);
+            });
+            }
+        } 
+        
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+   // const response = await fetch("https://localhost:7253/api/v1/Login", {
+       // method: "POST",
+      //  headers: {
+        //    "Content-Type": "application/json",
+        //    "Authorization": "Bearer " + token,
+       // },
+      //  body: JSON.stringify({
+           // 'emailforlogin': email,
+           // 'passwordforlogin': password
+        //}),
+   // });
     
     return(
         <div className="appMain">
@@ -118,7 +156,7 @@ function HomeMain(){
             </head>
 
             <header className="headerHome">
-            <input className="inptSearch" id="inpSearch" type="search" placeholder={randomElement}/>
+            <input className="inptSearch" id="inpSearch" type="search" onChange={(e) => pesquisarAnuncios(e.target.value)} placeholder={randomElement}/>
             <label className="lblSearch" htmlFor="inpSearch"><img width={27} height={27} src={lupa}/></label>
 
             <div className="links">
@@ -146,10 +184,12 @@ function HomeMain(){
             </div>
 
             </header>
-                
-                
-
             <div className="contentSite">
+
+                <ul id="listTitlesSearch">
+
+                </ul>
+
                     {announcements?.map((announcement: Announcement) => (
                         <div onClick={() => redirect(announcement.id)} className="cardAnnouncement" key={announcement.id}>
                             <div className="divImage">
