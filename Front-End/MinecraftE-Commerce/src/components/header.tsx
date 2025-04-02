@@ -116,7 +116,6 @@ function HomeMain(){
             (`https://localhost:7253/api/v1/SearchAn?strSearch=${strSearch}`);
 
             const data = await (await responseSearch).data;
-            const dataTitle = await data.title;
 
             const list = document.getElementById('listTitlesSearch');
 
@@ -125,8 +124,13 @@ function HomeMain(){
 
                 data.forEach((announcement: Announcement) => {
                 const listItem = document.createElement('li');
-                listItem.textContent = announcement.title; // or other relevant data
+                listItem.textContent = announcement.title;
                 list.appendChild(listItem);
+
+                if(strSearch == ''){                    
+                   list.innerHTML = '';
+                }
+
             });
             }
         } 
@@ -192,16 +196,14 @@ function HomeMain(){
 
                     {announcements?.map((announcement: Announcement) => (
                         <div onClick={() => redirect(announcement.id)} className="cardAnnouncement" key={announcement.id}>
-                            <div className="divImage">
-                                <img className="imageadd" src={`https://localhost:7253/${announcement.imageAnnouncement}`}/>
-                            </div>
+                        <img width={100} className="imageadd"  src={`https://localhost:7253/${announcement.imageAnnouncement}`}/>
                         <div className="infoAnuncio">
                             <img className="userPfpInInfo" width={20} src={`https://localhost:7253/${announcement.userPfp}`}/>
                             <p className="title">{announcement.title}</p>
                             <p className="description">{announcement.descripton}</p>
-                            <small className="price">{announcement.priceService}</small>
+                            <small className="price">R$: {announcement.priceService}</small>
                             <br />
-                            <small className="datetime">{announcement.createdAt}</small>]
+                            <small className="datetime">{announcement.createdAt}</small>
                         </div>
                         </div>
                     ))}

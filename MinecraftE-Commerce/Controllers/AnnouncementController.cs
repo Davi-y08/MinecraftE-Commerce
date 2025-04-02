@@ -137,14 +137,48 @@ namespace MinecraftE_Commerce.Controllers
 
         public async Task<IActionResult> DeleteAnnouncement(int id)
         {
-            var announcementDel = await _annService.DeleteAnnouncement(id);
+            //string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            //var user = await _userService.FindByNameAsync(userName!);
+            //string userId = user!.Id;
+            //var verifyAnnouncent = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == idAnnouncement);
+            //string beforeImage = verifyAnnouncent!.ImageAnnouncement;
+            //var idUserInAnnouncement = verifyAnnouncent!.UserId;
 
-            if (announcementDel == null)
+            //if (userId != idUserInAnnouncement)
+            //{
+            //    return Forbid();
+            //}
+
+            string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+
+            if (userName == null)
             {
-                return NotFound("Nao foi encontrado");
+                return Forbid();
             }
 
-            return Ok(announcementDel);
+            var user = await _userService.FindByNameAsync(userName!);
+            string userId = user!.Id;
+
+            var verifyAnnouncement = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == id);
+            int idAnnouncement = verifyAnnouncement!.Id;
+            string userIDInAnnouncement = verifyAnnouncement.UserId;
+
+            if (!(userId == userIDInAnnouncement))
+            {
+                return Forbid("Inautorizado");
+            }
+
+            else
+            {
+                var announcementDel = await _annService.DeleteAnnouncement(id);
+
+                if (announcementDel == null)
+                {
+                    return NotFound("Nao foi encontrado");
+                }
+
+                return Ok(announcementDel);
+            }
         }
 
         [HttpPut]

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { useMutation } from "react-query";
+import { useEffect } from "react";
 
 function CreateAnnouncementPage() {
   const [title, setTitle] = useState("");
@@ -36,6 +37,7 @@ function CreateAnnouncementPage() {
   }
 
   const handleSubmit = (e: React.FormEvent) => {
+
     e.preventDefault();
 
     if (!title || !description || !price || !file) {
@@ -58,18 +60,23 @@ function CreateAnnouncementPage() {
   })
 
 
-  if (isLoading) {
-    setBtnState('Carregando');
-  }
+   useEffect(() => {
+    if(isLoading){
+      setBtnState("Carregando...");
+    }
+    else{
+      setBtnState('Enviar');
+    }
+   })
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
         <label htmlFor="titleforcreate">Title for announcemenet: </label>
         <input
           type="text"
           name="titleforcreate"
           placeholder="title"
+          required
           onChange={(e) => setTitle(e.target.value)}
         />
 
@@ -82,13 +89,14 @@ function CreateAnnouncementPage() {
           name="descriptionforcreate"
           placeholder="Description"
           onChange={(e) => setDescription(e.target.value)}
+          required
         />
 
         <br />
         <br />
 
         <label htmlFor="imageforcreate">Image for your announcement: </label>
-        <input type="file" name="imageforcreate" onChange={onFileChange} />
+        <input type="file" name="imageforcreate" onChange={onFileChange} required/>
 
         <br />
         <br />
@@ -99,15 +107,15 @@ function CreateAnnouncementPage() {
           name="priceforcreate"
           onChange={(e) => setPrice(e.target.value)}
           placeholder="Price"
+          required
         />
 
         <br />
         <br />
 
-        <button type="submit" value={"Submit"}>
+        <button onClick={handleSubmit}>
           {btnState}
         </button>
-      </form>
     </div>
   );
 }
