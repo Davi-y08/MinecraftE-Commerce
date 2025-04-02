@@ -121,7 +121,7 @@ namespace MinecraftE_Commerce.Controllers
 
 
             if (!_memCache.TryGetValue("users", out users!))
-            {
+            {                   
                 users = await _context.Users.ToListAsync();
 
                 var memCacheOptions = new MemoryCacheEntryOptions()
@@ -151,6 +151,5 @@ namespace MinecraftE_Commerce.Controllers
             return Ok();
         }
     }
-
 
 }
