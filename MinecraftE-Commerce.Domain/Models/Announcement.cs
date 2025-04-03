@@ -10,6 +10,7 @@ namespace MinecraftE_Commerce.Domain.Models
         public string ImageAnnouncement { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public decimal PriceService { get; set; }
+        public int Sales { get; set; }
 
         [JsonIgnore]
         public User? UserInfo { get; set; }

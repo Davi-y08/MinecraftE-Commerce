@@ -17,5 +17,19 @@ namespace MinecraftE_Commerce.Infrastructure.Data.Configs
                 entity.Property(x => x.CreatedAt).IsRequired();
             });
         }
+
+        public static void SetupSales(ModelBuilder builder)
+        {
+            builder.Entity<Sale>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Id).ValueGeneratedOnAdd();
+                entity.Property(x => x.AnnouncementPrice).IsRequired();
+                entity.Property(x => x.AnnouncementId).IsRequired();
+                entity.Property(x => x.BuyerId).IsRequired();
+                entity.Property(x => x.ReceiverId).IsRequired();
+                entity.Property(x => x.SaledOn).IsRequired();
+            });
+        }
     }
 }

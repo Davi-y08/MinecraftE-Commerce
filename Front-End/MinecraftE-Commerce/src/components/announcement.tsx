@@ -2,8 +2,9 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import '../styles/card.css'
-import lupa from '../images/lupa.png'
+import '../styles/card.css';
+import '../styles/annoucementPage.css';
+import lupa from '../images/lupa.png';
 
 function AnnouncementPage(){
     const navigate = useNavigate();
@@ -138,6 +139,11 @@ async function pesquisarAnuncios(strSearch: string) {
         <div>
 
 <header className="headerHome">
+
+            <head>
+                <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+            </head>
+
             <input className="inptSearch" id="inpSearch" type="search" onChange={(e) => pesquisarAnuncios(e.target.value)} placeholder={randomElement}/>
             <label className="lblSearch" htmlFor="inpSearch"><img width={27} height={27} src={lupa}/></label>
 
@@ -166,13 +172,16 @@ async function pesquisarAnuncios(strSearch: string) {
             </div>
 
             </header>
-
             {announcementAdd && (
                 <div>
                     <h1>
                         {announcementAdd.title}
                     </h1>
                     <img width={100} src={`https://localhost:7253/${announcementAdd.imageAnnouncement}`}/>
+                    <p>{announcementAdd.descripton}</p>
+                    <p>{announcementAdd.priceService}</p>
+                    <h1>Vendedor: {announcementAdd.userName}</h1>
+                    <img width={100} src={`https://localhost:7253/${announcementAdd.userPfp}`}/>
                 </div>
             )}        
         </div>

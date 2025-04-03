@@ -9,7 +9,7 @@ namespace MinecraftE_Commerce.Infrastructure.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { } 
 
         public DbSet<Announcement> Announcements { get; set; }
-
+        public DbSet<Sale> Sales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -20,6 +20,10 @@ namespace MinecraftE_Commerce.Infrastructure.Data
                 .WithMany(p => p!.Announcements)
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Sale>()
+                .HasOne(p => p.User)
+                .
         }
     }
 }

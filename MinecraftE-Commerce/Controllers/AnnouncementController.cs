@@ -35,6 +35,8 @@ namespace MinecraftE_Commerce.Controllers
             _mailSender = mailSender;
         }
 
+
+
         [HttpGet("{id:int}")]
 
         public async Task<IActionResult> GetAnnById(int id)
