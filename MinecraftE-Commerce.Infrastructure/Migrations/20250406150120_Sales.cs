@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MinecraftE_Commerce.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FixedError : Migration
+    public partial class Sales : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -110,6 +110,7 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     PriceService = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Sales = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserName = table.Column<string>(type: "longtext", nullable: false)
@@ -231,6 +232,44 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "Sales",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ReceiverId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BuyerId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AnnouncementId = table.Column<int>(type: "int", nullable: false),
+                    SaledOn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    AnnouncementPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sales_Announcements_AnnouncementId",
+                        column: x => x.AnnouncementId,
+                        principalTable: "Announcements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sales_AspNetUsers_BuyerId",
+                        column: x => x.BuyerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sales_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Announcements_UserId",
                 table: "Announcements",
@@ -272,14 +311,26 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sales_AnnouncementId",
+                table: "Sales",
+                column: "AnnouncementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sales_BuyerId",
+                table: "Sales",
+                column: "BuyerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sales_ReceiverId",
+                table: "Sales",
+                column: "ReceiverId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Announcements");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -296,7 +347,13 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Sales");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Announcements");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

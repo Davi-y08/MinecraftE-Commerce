@@ -11,8 +11,8 @@ using MinecraftE_Commerce.Infrastructure.Data;
 namespace MinecraftE_Commerce.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250225224350_FixeErros")]
-    partial class FixeErros
+    [Migration("20250406150120_Sales")]
+    partial class Sales
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,6 +170,9 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.Property<decimal>("PriceService")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<int>("Sales")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -191,6 +194,40 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Announcements");
+                });
+
+            modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Sale", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AnnouncementId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("AnnouncementPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("BuyerId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("SaledOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnnouncementId");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.ToTable("Sales");
                 });
 
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.User", b =>
@@ -314,13 +351,40 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
 
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Announcement", b =>
                 {
-                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "User")
+                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "UserInfo")
                         .WithMany("Announcements")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("UserInfo");
+                });
+
+            modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Sale", b =>
+                {
+                    b.HasOne("MinecraftE_Commerce.Domain.Models.Announcement", "Announcement")
+                        .WithMany()
+                        .HasForeignKey("AnnouncementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Announcement");
+
+                    b.Navigation("Buyer");
+
+                    b.Navigation("Receiver");
                 });
 
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.User", b =>

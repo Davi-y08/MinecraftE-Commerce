@@ -205,23 +205,24 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.Property<decimal>("AnnouncementPrice")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<int>("BuyerId")
-                        .HasColumnType("int");
+                    b.Property<string>("BuyerId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("SaledOn")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AnnouncementId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("ReceiverId");
 
                     b.ToTable("Sales");
                 });
@@ -361,16 +362,26 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.HasOne("MinecraftE_Commerce.Domain.Models.Announcement", "Announcement")
                         .WithMany()
                         .HasForeignKey("AnnouncementId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "User")
+                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "Buyer")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Announcement");
 
-                    b.Navigation("User");
+                    b.Navigation("Buyer");
+
+                    b.Navigation("Receiver");
                 });
 
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.User", b =>
