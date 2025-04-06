@@ -28,11 +28,10 @@ namespace MinecraftE_Commerce.Domain.Services
             var newSale = new Sale
             {
                 SaledOn = DateTime.Now,
-                Announcement = announcementSearch,
-                AnnouncementPrice = announcementSearch.PriceService,
                 AnnouncementId = announcementSearch.Id,
-                ReceiverId = receiverId,
+                AnnouncementPrice = announcementSearch.PriceService,
                 BuyerId = buyerId,
+                ReceiverId = receiverId,
             };
 
             return await _saleService!.CreateSale(newSale);

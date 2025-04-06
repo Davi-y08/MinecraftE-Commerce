@@ -22,22 +22,16 @@ namespace MinecraftE_Commerce.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Sale>()
-                .HasOne(p => p.Receiver)
-                .WithMany()
-                .HasForeignKey(s => s.ReceiverId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Sale>()
-            .HasOne(p => p.Buyer)
-            .WithMany()
+            .HasOne(p => p.BuyerInfo)
+            .WithMany(p => p!.Sales)
             .HasForeignKey(s => s.BuyerId)
             .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Sale>()
-            .HasOne(p => p.Announcement)
-            .WithMany() 
-            .HasForeignKey(s => s.AnnouncementId)
-            .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(p => p.AnnouncementInfo)
+                .WithMany()
+                .HasForeignKey(s => s.AnnouncementId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
