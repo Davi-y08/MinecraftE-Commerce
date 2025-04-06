@@ -8,10 +8,9 @@ namespace MinecraftE_Commerce.Domain.Models
         public string Title { get; set; } = string.Empty;
         public string Descripton { get; set; } = string.Empty;
         public string ImageAnnouncement { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public decimal PriceService { get; set; }
-        public int Sales { get; set; }
-
+        public int Sales { get; set; } = 0;
         [JsonIgnore]
         public User? UserInfo { get; set; }
         public string UserId { get; set; } = string.Empty;

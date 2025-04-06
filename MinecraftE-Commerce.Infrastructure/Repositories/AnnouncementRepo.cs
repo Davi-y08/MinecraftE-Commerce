@@ -65,5 +65,19 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
             if (search == null) return null!;
             return search;
         }
+
+        public async Task<Announcement> ReadAndAddValueForSales(int id)
+        {
+            var announcement = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (announcement == null)
+                return null!;
+
+            announcement.Sales += 1;
+
+            await _context.SaveChangesAsync();
+
+            return announcement;
+        }
     }
 }
