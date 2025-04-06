@@ -14,19 +14,20 @@ namespace MinecraftE_Commerce.Domain.Services
             return await _saleService!.GetAllSales();
         }
 
-        public async Task<Sale> CreateSale(Sale saleModel, int announcementId, int buyerId, int receiverId, Announcement priceAnn)
+        public async Task<Sale> CreateSale(Sale saleModel, int announcementId, int buyerId, int receiverId, Announcement announcement)
         {
-            var announcement = _annoucementService!.GetAnnouncementById(announcementId);
-    
+            var announcementGet = _annoucementService!.GetAnnouncementById(announcementId);
+            var idUserInAnnoucement = announcement.UserId;
+
             var newSale = new Sale();
             newSale.Id = saleModel.Id;
             newSale.SaledOn = saleModel.SaledOn;
-            newSale.AnnouncementPrice = priceAnn.PriceService;
+            newSale.AnnouncementPrice = announcement.PriceService;
             newSale.AnnouncementId = announcementId;
             newSale.BuyerId = buyerId;
             newSale.ReceiverId = receiverId;
 
-            return await _saleService!.CreateSale(newSale);
+            return await _saleService!.CreateSale(newSale, announcementId, buyerId);
         }
     }
 }
