@@ -9,7 +9,11 @@ namespace MinecraftE_Commerce.Application.Mappers.SaleMappers
         {
             return new DisplaySaleDto
             {
-                SaledOn = saleModel.SaledOn
+                idSale = saleModel.Id,
+                saledOn = saleModel.SaledOn,
+                announcementId = saleModel.AnnouncementId,
+                buyerId = saleModel.BuyerId,
+                receiverId = saleModel.ReceiverId,
             };
         }
     }

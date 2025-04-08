@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string ReceiverId { get; set; } = string.Empty;
-        public string BuyerId = string.Empty;
+        public string BuyerId { get; set; } = string.Empty;
         public User? BuyerInfo { get; set; }
         public int AnnouncementId { get; set; }
         public Announcement AnnouncementInfo { get; set; } = null!;

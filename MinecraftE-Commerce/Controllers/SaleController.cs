@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MinecraftE_Commerce.Application.Dtos.SaleDto;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
 
@@ -25,7 +26,7 @@ namespace MinecraftE_Commerce.Controllers
 
         public async Task<IActionResult> CreateSale([FromBody] int idAnnouncement)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var announcement = await _annoucementService.GetAnnouncementById(idAnnouncement);
@@ -43,11 +44,11 @@ namespace MinecraftE_Commerce.Controllers
 
             var user = await _userService.FindByNameAsync(username!);
 
-            if(user == null)
+            if (user == null)
                 return NotFound();
 
             string idUserBuyer = user.Id;
-            
+
             decimal valueAnnouncement = announcement.PriceService;
 
             var model = new Sale
@@ -63,6 +64,24 @@ namespace MinecraftE_Commerce.Controllers
             await _saleService.CreateSale(model);
 
             return Ok("Compra efetuada com sucesso");
+        }
+
+        [HttpGet("GetAllSales")]
+
+        public async Task<IActionResult> GetAllSales()
+        {
+            var sales = await _saleService.GetAllSales();
+
+            var dto = sales.Select(s => new DisplaySaleDto
+            {
+                idSale = s.Id,
+                announcementId = s.Id,
+                receiverId = s.ReceiverId,
+                buyerId = s.BuyerId,
+                saledOn = s.SaledOn, 
+            }).ToList();
+
+            return Ok(dto);
         }
     }
 }
