@@ -10,6 +10,7 @@ function AnnouncementPage(){
     const navigate = useNavigate();
     const pfp = localStorage.getItem("pfp");
     const token = localStorage.getItem("token");
+    const bearer = "Bearer " + localStorage.getItem("token");
     var notLog;
     let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins legais', 'Que tal uma pesquisa', 'Gosta de criar mods?']
     const randomIndex = Math.floor(Math.random() * arr.length);
@@ -134,6 +135,27 @@ async function pesquisarAnuncios(strSearch: string) {
     }
 }
 
+    async function buyFunction(idAnnouncement: number) 
+    {
+        if(idAnnouncement == null){
+            alert('erro');
+            return;
+        }       
+
+        const buyResponse = await fetch('https://localhost:7253/api/v2', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': bearer,
+            },
+            body: JSON.stringify(
+                idAnnouncement
+            ) 
+        });
+
+        const data = await buyResponse.json();
+        console.log(data);
+    }
 
     return(
         <div>
@@ -182,6 +204,7 @@ async function pesquisarAnuncios(strSearch: string) {
                     <p>{announcementAdd.priceService}</p>
                     <h1>Vendedor: {announcementAdd.userName}</h1>
                     <img width={100} src={`https://localhost:7253/${announcementAdd.userPfp}`}/>
+                    <button onClick={() => buyFunction(announcementAdd.id)} className="btnComprar">Comprar R${announcementAdd.priceService}</button>
                 </div>
             )}        
         </div>
