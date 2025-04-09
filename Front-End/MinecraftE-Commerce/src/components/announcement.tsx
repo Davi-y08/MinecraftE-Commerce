@@ -150,7 +150,7 @@ async function pesquisarAnuncios(strSearch: string) {
             },
             body: JSON.stringify(
                 idAnnouncement
-            ) 
+            )
         });
 
         const data = await buyResponse.json();

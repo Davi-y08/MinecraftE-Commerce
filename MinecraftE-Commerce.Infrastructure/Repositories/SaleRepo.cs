@@ -24,8 +24,9 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
 
         public async Task<List<Sale>> GetAllSales()
         {
-            var listSales = await _context.Sales.ToListAsync();
-            return listSales;
+            var sales = await _context.Sales.ToListAsync();
+
+            return sales;
         }
 
         public Task<Sale> StatusSale(bool status)

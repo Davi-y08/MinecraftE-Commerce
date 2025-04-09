@@ -75,10 +75,11 @@ namespace MinecraftE_Commerce.Controllers
             var dto = sales.Select(s => new DisplaySaleDto
             {
                 idSale = s.Id,
-                announcementId = s.Id,
+                announcementId = s.AnnouncementId,
                 receiverId = s.ReceiverId,
                 buyerId = s.BuyerId,
-                saledOn = s.SaledOn, 
+                saledOn = s.SaledOn,
+                valueAnnouncement = s.AnnouncementPrice
             }).ToList();
 
             return Ok(dto);
