@@ -95,8 +95,11 @@ function AnnouncementPage(){
    }    
 
    useEffect(() => {
+    if(id){
     returnAnn();
-   }, [])
+    isBought();
+    }
+   }, [id])
 
    function navToCreateAd(){
     navigate('/createad');
@@ -157,14 +160,22 @@ async function pesquisarAnuncios(strSearch: string) {
         console.log(data);
     }
 
-    function isBought(){
-        
+    async function isBought(){
+        const responseBought = await fetch(`https://localhost:7253/api/v2/IsBought?idAnnouncement=${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': bearer,
+            },
+        });
+
+        const result = await responseBought.json();
+        console.log(result);
     }
 
     return(
         <div>
 
-<header className="headerHome">
+            <header className="headerHome">
 
             <head>
                 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
