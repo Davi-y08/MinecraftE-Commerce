@@ -7,5 +7,6 @@ namespace MinecraftE_Commerce.Domain.Interfaces
         Task<List<Sale>> GetAllSales();
         Task<Sale> CreateSale(Sale saleModel);
         Task<Sale> StatusSale(bool status);
+        Task<List<Sale>> IsBought(int idAnnouncement);
     }
 }

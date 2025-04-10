@@ -157,6 +157,10 @@ async function pesquisarAnuncios(strSearch: string) {
         console.log(data);
     }
 
+    function isBought(){
+        
+    }
+
     return(
         <div>
 

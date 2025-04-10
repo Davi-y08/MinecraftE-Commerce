@@ -29,6 +29,18 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
             return sales;
         }
 
+        public async Task<List<Sale>> IsBought(int idAnnouncement)
+        {
+            var sales = await _context.Sales.Where(s => s.AnnouncementId == idAnnouncement).ToListAsync();
+
+            if (sales == null)
+            {
+                return null!;
+            }
+
+            return sales;
+        }
+
         public Task<Sale> StatusSale(bool status)
         {
             throw new NotImplementedException();

@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MinecraftE_Commerce.Application.Dtos.SaleDto;
@@ -22,6 +23,7 @@ namespace MinecraftE_Commerce.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         [HttpPost]
 
         public async Task<IActionResult> CreateSale([FromBody] int idAnnouncement)
@@ -57,6 +59,7 @@ namespace MinecraftE_Commerce.Controllers
                 BuyerId = idUserBuyer!,
                 AnnouncementId = idAnnouncement,
                 SaledOn = DateTime.Now,
+                AnnouncementPrice = valueAnnouncement,
             };
 
             await _annoucementService.ReadAndAddValueForSales(idAnnouncement);
@@ -83,6 +86,39 @@ namespace MinecraftE_Commerce.Controllers
             }).ToList();
 
             return Ok(dto);
+        }
+
+        [Authorize]
+        [HttpGet("IsBought")]
+
+        public async Task<IActionResult> IsBought([FromQuery] int idAnnouncement)
+        {
+            var sales = await _saleService.IsBought(idAnnouncement);
+
+            if (sales == null)
+            {
+                return NotFound("Anuncio ou venda nao encontrada");
+            }
+
+            string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await _userService.FindByNameAsync(userName!);
+
+            if (user == null)
+            {
+                return NotFound("Usuario nao encontrado");
+            }
+
+            string userId = user!.Id;
+
+            bool wasBoughtByUser = sales.Any(s => s.BuyerId == userId);
+
+            if (!wasBoughtByUser)
+            {
+                return BadRequest();
+            }
+
+            return Ok(wasBoughtByUser);
+
         }
     }
 }
