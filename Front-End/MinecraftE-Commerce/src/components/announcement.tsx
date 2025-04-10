@@ -15,6 +15,7 @@ function AnnouncementPage(){
     let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins legais', 'Que tal uma pesquisa', 'Gosta de criar mods?']
     const randomIndex = Math.floor(Math.random() * arr.length);
     const randomElement = arr[randomIndex];
+    const [btnBuyState, setBtnBuyState] = useState('Comprar R$');
 
     if (pfp == null && token == null) {
         notLog = "SignIn/SignUp"    
@@ -169,6 +170,12 @@ async function pesquisarAnuncios(strSearch: string) {
         });
 
         const result = await responseBought.json();
+
+        if(result == true){
+            setBtnBuyState("Comprar novamente R$");
+            console.log('é true');
+        }
+
         console.log(result);
     }
 
@@ -219,7 +226,7 @@ async function pesquisarAnuncios(strSearch: string) {
                     <p>{announcementAdd.priceService}</p>
                     <h1>Vendedor: {announcementAdd.userName}</h1>
                     <img width={100} src={`https://localhost:7253/${announcementAdd.userPfp}`}/>
-                    <button onClick={() => buyFunction(announcementAdd.id)} className="btnComprar">Comprar R${announcementAdd.priceService}</button>
+                    <button onClick={() => buyFunction(announcementAdd.id)} className="btnComprar">{btnBuyState}{announcementAdd.priceService}</button>
                 </div>
             )}        
         </div>

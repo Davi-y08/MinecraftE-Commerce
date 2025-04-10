@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using MinecraftE_Commerce.Domain.Enums.AnnouncementsEnums;
 
 namespace MinecraftE_Commerce.Domain.Models
 {
@@ -16,5 +17,6 @@ namespace MinecraftE_Commerce.Domain.Models
         public string UserId { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string UserPfp { get; set; } = string.Empty;
+        public TypeOfAnnouncementEnum TypeOfAnnouncement { get; set; } 
     }
 }

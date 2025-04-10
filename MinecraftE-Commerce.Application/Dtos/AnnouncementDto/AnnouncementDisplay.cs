@@ -1,4 +1,6 @@
-﻿namespace MinecraftE_Commerce.Application.Dtos.AnnouncementDto
+﻿using MinecraftE_Commerce.Domain.Enums.AnnouncementsEnums;
+
+namespace MinecraftE_Commerce.Application.Dtos.AnnouncementDto
 {
     public  class AnnouncementDisplay
     {
@@ -9,5 +11,6 @@
         public string ImageAnnouncement { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string UserPfp { get; set; } = string.Empty;
+        public TypeOfAnnouncementEnum TypeAnnouncement { get; set; }
     }
 }
