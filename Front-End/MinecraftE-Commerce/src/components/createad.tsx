@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "react-query";
 import { useEffect } from "react";
 
@@ -7,6 +7,7 @@ function CreateAnnouncementPage() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [file, setFile] = useState(null);
+  const [typeOfAnnouncement, setTypeOfAnnouncement] = useState('');
   const bearer = "Bearer " + localStorage.getItem("token");
   const [btnState, setBtnState] = useState('Enviar');
 
@@ -16,7 +17,7 @@ function CreateAnnouncementPage() {
 
   async function createAdAsync(formData: FormData) {
     if (
-      !(title == null && description == null && price == null && file == null)
+      !(title == null && description == null && price == null && file == null && typeOfAnnouncement == null)
     ) {
       const response = await fetch("https://localhost:7253/api/v1/CreateAdd", {
         method: "POST",
@@ -40,7 +41,7 @@ function CreateAnnouncementPage() {
 
     e.preventDefault();
 
-    if (!title || !description || !price || !file) {
+    if (!title || !description || !price || !file || !typeOfAnnouncement) {
       alert("Por favor, preencha todos os campos.");
       return;
     }
@@ -50,6 +51,7 @@ function CreateAnnouncementPage() {
     formData.append("Description", description);
     formData.append("ImageAnnouncement", file);
     formData.append("PriceService", price);
+    formData.append("TypeAnnouncement", typeOfAnnouncement);
     mutate(formData);
   };
 
@@ -109,6 +111,20 @@ function CreateAnnouncementPage() {
           placeholder="Price"
           required
         />
+
+        <br />
+        <br />
+
+        <label htmlFor="typeAnnouncement">Selecione o tipo de anúncio: </label>
+        <select required onChange={(e) => setTypeOfAnnouncement(e.target.value)} name="typeAnnnouncement" id="typeOfAnnouncement">
+          <option value="0">Plugin</option>
+          <option value="1">Mod</option>
+          <option value="2">Contrução</option>
+          <option value="3">Serviço</option>
+          <option value="4">Ajuda</option>
+          <option value="5">Seeds</option>
+          <option value="6">Skins</option>
+        </select>
 
         <br />
         <br />

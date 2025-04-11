@@ -231,7 +231,6 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [HttpGet]
-
         public async Task<IActionResult> ReturnAnnouncementInRandomOrder()
         {
             var announcements = await _annService.GetAllAnnouncements();
@@ -249,13 +248,8 @@ namespace MinecraftE_Commerce.Controllers
                 numerosDisponiveis.RemoveAt(indexAleatorio);
             }
 
-            for (int i = 0; i < lengthArray; i++)
+            for (int i = lengthArray - 1; i > 0; i--)
             {
-                //int indexAuxiliar = numerosJaEscolhidos[j];
-                //Announcement announcement = new Announcement();
-                //announcement = array[j];
-                //array[j] = array[indexAuxiliar];
-                //array[indexAuxiliar] = announcement;
                 int j = rng.Next(0, lengthArray);
                 (array[i], array[j]) = (array[j], array[i]);
             }
@@ -264,8 +258,5 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok(arrayToListBack);   
         }
-
-        //var announcements = await _annService.GetAllAnnouncements();
-           // return Ok(announcements);
     }
 }
