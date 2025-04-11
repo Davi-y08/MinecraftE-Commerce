@@ -8,6 +8,6 @@
         Serviço,
         Ajuda,
         Seeds,
-        Skins,
+        Skins,    
     }
 }

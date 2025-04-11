@@ -16,6 +16,7 @@ namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
                 CreatedAt = createAdd.CreatedAt,
                 ImageAnnouncement = toString!,
                 PriceService = createAdd.PriceService,
+                TypeOfAnnouncement = createAdd.TypeAnnouncement,
             };
         }
     }

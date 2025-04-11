@@ -16,6 +16,7 @@ namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
                 CreatedAt = addModel.CreatedAt,
                 UserName = addModel.UserName,
                 UserPfp = addModel.UserPfp,
+                TypeAnnouncement = addModel.TypeOfAnnouncement,
             };
         }
     }
