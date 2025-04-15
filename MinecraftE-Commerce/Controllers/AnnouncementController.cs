@@ -230,7 +230,7 @@ namespace MinecraftE_Commerce.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("GetInRandomOrder")]
         public async Task<IActionResult> ReturnAnnouncementInRandomOrder()
         {
             var announcements = await _annService.GetAllAnnouncements();

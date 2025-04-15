@@ -83,7 +83,7 @@ function HomeMain(){
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 
     async function display() {
-        const response = await axios.get('https://localhost:7253/api/v1/GetAll');
+        const response = await axios.get('https://localhost:7253/api/v1/GetInRandomOrder');
         const data = response.data;
         setAnnouncements(data);
     }
@@ -192,8 +192,56 @@ function HomeMain(){
 
                 <ul id="listTitlesSearch">
 
-                </ul>
+                <div className="plugins">
+                    <h1>Plugins</h1>
+                    <ul>
 
+                    </ul>
+                </div>
+
+                <div className="mods">
+                    <h1>Mods</h1>
+                    <ul>
+
+                    </ul>
+                </div>
+
+                <div className="construcao">
+                    <h1>Construções</h1>
+                    <ul>
+
+                    </ul>
+                </div>
+
+                <div className="servico">
+                    <h1>Serviços</h1>
+                    <ul>
+
+                    </ul>
+                </div>
+
+                <div className="ajuda">
+                    <h1>Ajudas</h1>
+                    <ul>
+
+                    </ul>
+                </div>
+
+                <div className="seeds">
+                    <h1>Seeds</h1>
+                    <ul>
+
+                    </ul>
+                </div>
+
+                <div className="skins">
+                    <h1>Skins</h1>
+                    <ul>
+
+                    </ul>
+                </div>
+
+                </ul>
                     {announcements?.map((announcement: Announcement) => (
                         <div onClick={() => redirect(announcement.id)} className="cardAnnouncement" key={announcement.id}>
                         <img width={100} className="imageadd"  src={`https://localhost:7253/${announcement.imageAnnouncement}`}/>
