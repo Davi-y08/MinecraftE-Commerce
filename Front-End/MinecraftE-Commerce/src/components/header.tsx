@@ -77,15 +77,30 @@ function HomeMain(){
         title: string,
         userId: string,
         userName: string,
-        userPfp: string
+        userPfp: string,
+        typeOfAnnouncement: number
     }
 
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+    const [plugins, setPlugins] = useState<Announcement[]>([]);
+    const [mods, setMods] = useState<Announcement[]>([]);
+    const [construcoes, setConstrucoes] = useState<Announcement[]>([]);
+    const [servicos, setServicos] = useState<Announcement[]>([]);
+    const [ajuda, setAjuda] = useState<Announcement[]>([]);
+    const [seeds, setSeeds] = useState<Announcement[]>([]);
+    const [skins, setSkins] = useState<Announcement[]>([]);
 
     async function display() {
         const response = await axios.get('https://localhost:7253/api/v1/GetInRandomOrder');
-        const data = response.data;
-        setAnnouncements(data);
+        const data: Announcement[] = await response.data;
+
+        setPlugins(data.filter(a => a.typeOfAnnouncement === 0));
+        setMods(data.filter(a => a.typeOfAnnouncement === 1));
+        setConstrucoes(data.filter(a => a.typeOfAnnouncement === 2));
+        setServicos(data.filter(a => a.typeOfAnnouncement === 3));
+        setAjuda(data.filter(a => a.typeOfAnnouncement === 4));
+        setSeeds(data.filter(a => a.typeOfAnnouncement === 5));
+        setSkins(data.filter(a => a.typeOfAnnouncement === 6));
     }
 
     useEffect(() => {
@@ -155,7 +170,7 @@ function HomeMain(){
     return(
         <div className="appMain">
 
-            <head>
+            <head>9
             <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
             </head>
 
@@ -189,72 +204,7 @@ function HomeMain(){
 
             </header>
             <div className="contentSite">
-
-                <ul id="listTitlesSearch">
-
-                <div className="plugins">
-                    <h1>Plugins</h1>
-                    <ul>
-
-                    </ul>
-                </div>
-
-                <div className="mods">
-                    <h1>Mods</h1>
-                    <ul>
-
-                    </ul>
-                </div>
-
-                <div className="construcao">
-                    <h1>Construções</h1>
-                    <ul>
-
-                    </ul>
-                </div>
-
-                <div className="servico">
-                    <h1>Serviços</h1>
-                    <ul>
-
-                    </ul>
-                </div>
-
-                <div className="ajuda">
-                    <h1>Ajudas</h1>
-                    <ul>
-
-                    </ul>
-                </div>
-
-                <div className="seeds">
-                    <h1>Seeds</h1>
-                    <ul>
-
-                    </ul>
-                </div>
-
-                <div className="skins">
-                    <h1>Skins</h1>
-                    <ul>
-
-                    </ul>
-                </div>
-
-                </ul>
-                    {announcements?.map((announcement: Announcement) => (
-                        <div onClick={() => redirect(announcement.id)} className="cardAnnouncement" key={announcement.id}>
-                        <img width={100} className="imageadd"  src={`https://localhost:7253/${announcement.imageAnnouncement}`}/>
-                        <div className="infoAnuncio">
-                            <img className="userPfpInInfo" width={20} src={`https://localhost:7253/${announcement.userPfp}`}/>
-                            <p className="title">{announcement.title}</p>
-                            <p className="description">{announcement.descripton}</p>
-                            <small className="price">R$: {announcement.priceService}</small>
-                            <br />
-                            <small className="datetime">{announcement.createdAt}</small>
-                        </div>
-                        </div>
-                    ))}
+                
             </div>
         </div>
     )
