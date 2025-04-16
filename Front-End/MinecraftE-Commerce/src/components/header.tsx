@@ -9,7 +9,7 @@ function HomeMain(){
     const pfp = localStorage.getItem("pfp");
     const token = localStorage.getItem("token");
     var notLog;
-    let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins legais', 'Que tal uma pesquisa', 'Gosta de criar mods?']
+    let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins legais', 'Que tal uma pesquisa', 'Gosta de criar mods?'];
     const randomIndex = Math.floor(Math.random() * arr.length);
     const randomElement = arr[randomIndex];
 
@@ -166,6 +166,56 @@ function HomeMain(){
            // 'passwordforlogin': password
         //}),
    // });
+
+   const sections = [
+    {title : 'Plugins', data: plugins},
+    {title : 'Mods', data: mods},
+    {title : 'Construções', data: construcoes},
+    {title : 'Serviços', data: servicos},
+    {title : 'Ajuda', data: ajuda},
+    {title : 'Seeds', data: seeds},
+    {title : 'Skins', data: skins},
+   ]
+
+   function renderSection(title: string, data: Announcement[]){
+    if(data.length === 0){
+        return null;
+    }
+
+    return(
+        <section className="sectionHome" key={title}>
+            <h2>{title}</h2>
+            <div className="gridAnuncios">
+                {data.map((announcement) => (
+                    <div
+                        onClick={() => redirect(announcement.id)}
+                        className="cardAnnouncement"
+                        key={announcement.id}
+                    >
+                        <img
+                            width={100}
+                            className="imageadd"
+                            src={`https://localhost:7253/${announcement.imageAnnouncement}`}
+                        />
+                        <div className="infoAnuncio">
+                            <img
+                                className="userPfpInInfo"
+                                width={20}
+                                src={`https://localhost:7253/${announcement.userPfp}`}
+                            />
+                            <p className="title">{announcement.title}</p>
+                            <p className="description">{announcement.descripton}</p>
+                            <small className="price">R$: {announcement.priceService}</small>
+                            <br />
+                            <small className="datetime">{announcement.createdAt}</small>
+                            <small className="type">Tipo: {announcement.typeOfAnnouncement}</small>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+    );
+   }
     
     return(
         <div className="appMain">
@@ -204,7 +254,7 @@ function HomeMain(){
 
             </header>
             <div className="contentSite">
-                
+            {sections.map(section => renderSection(section.title, section.data))}
             </div>
         </div>
     )
