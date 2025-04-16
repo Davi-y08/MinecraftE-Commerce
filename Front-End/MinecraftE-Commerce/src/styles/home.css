@@ -118,13 +118,10 @@ body{
 
 .contentSite {
     display: flex;
-    flex-wrap: wrap;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     padding: 20px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 50px;
     margin-left: 0;
-    gap: 75px; 
-    margin-left: -100px;   
 }
 
 .cardAnnouncement {
@@ -188,8 +185,25 @@ body{
     color: #999;
 }
 
+.sectionHome {
+    width: 100%;
+    padding: 30px;
+    border-bottom: 1px solid #ccc;
+}
+
+.sectionHome h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 2px solid black;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
 .gridAnuncios {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
 }
