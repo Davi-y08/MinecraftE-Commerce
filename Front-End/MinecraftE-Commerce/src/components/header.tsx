@@ -9,7 +9,7 @@ function HomeMain(){
     const pfp = localStorage.getItem("pfp");
     const token = localStorage.getItem("token");
     var notLog;
-    let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins legais', 'Que tal uma pesquisa', 'Gosta de criar mods?'];
+    let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins?', 'Que tal uma pesquisa', 'Gosta de criar mods?'];
     const randomIndex = Math.floor(Math.random() * arr.length);
     const randomElement = arr[randomIndex];
 
@@ -60,6 +60,10 @@ function HomeMain(){
 
     async function loginPage() {
         navigate('/login');
+    }
+    
+    async function myAnnouncementsPage() {
+        navigate('/myAnnouncements');
     }
 
     async function logout() {
@@ -220,7 +224,7 @@ function HomeMain(){
     return(
         <div className="appMain">
 
-            <head>9
+            <head>
             <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
             </head>
 
@@ -229,7 +233,7 @@ function HomeMain(){
             <label className="lblSearch" htmlFor="inpSearch"><img width={27} height={27} src={lupa}/></label>
 
             <div className="links">
-                <a href="#">My announcements</a>
+                <a onClick={myAnnouncementsPage}>My announcements</a>
                 <a href="#">About</a>
                 <a href="#">Terms of use</a>
                 <a href="https://github.com/Davi-y08/MinecraftE-Commerce">Project</a>

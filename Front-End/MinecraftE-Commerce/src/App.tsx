@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import HomeMain from "./components/header";
 import AnnouncementPage from "./components/announcement";
 import CreateAnnouncementPage from "./components/createad";
+import MyAnnouncementsPage from "./components/myAnnouncements";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element = {<Login></Login>}/>
           <Route path="/announcements/:id" element = {<AnnouncementPage/>}/>
           <Route path="/createad" element = {<CreateAnnouncementPage/>}/>
+          <Route path="/myAnnouncements" element = {<MyAnnouncementsPage/>}/>
         </Routes>
       </Router>
       </QueryClientProvider>
