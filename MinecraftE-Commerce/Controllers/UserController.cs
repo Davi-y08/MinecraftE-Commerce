@@ -62,6 +62,7 @@ namespace MinecraftE_Commerce.Controllers
 
                 else return BadRequest(createUser.Errors);
             }
+
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -114,7 +115,6 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [HttpGet("GetAllUsers")]
-
         public async Task<IActionResult> GetAllUsers()
         {
             List<User> users = new List<User>();
