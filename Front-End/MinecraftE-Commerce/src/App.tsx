@@ -1,10 +1,10 @@
-import Login from "./components/login";
+import Login from "./components/User/login";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import HomeMain from "./components/header";
-import AnnouncementPage from "./components/announcement";
-import CreateAnnouncementPage from "./components/createad";
-import MyAnnouncementsPage from "./components/myAnnouncements";
+import HomeMain from "./components/Home/home";
+import AnnouncementPage from "./components/Announcements/announcement";
+import CreateAnnouncementPage from "./components/Announcements/createad";
+import MyAnnouncementsPage from "./components/User/overview";
 
 function App() {
 
