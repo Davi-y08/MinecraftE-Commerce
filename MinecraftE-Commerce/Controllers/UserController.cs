@@ -133,12 +133,11 @@ namespace MinecraftE_Commerce.Controllers
             return Ok(users);
         }
 
-        [HttpPost]
+        [HttpDelete]
         public async Task<IActionResult> DeleteUser([FromQuery] string id)
         {
-
             var user = await _userManager!.FindByIdAsync(id);
-
+            string retorno = "Usuário criado com sucesso!";
             try
             {
                 await _userManager.DeleteAsync(user!);
@@ -148,7 +147,7 @@ namespace MinecraftE_Commerce.Controllers
                 return BadRequest(ex);
             }
 
-            return Ok();
+            return Ok(new CreatedUser(retorno));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace MinecraftE_Commerce.ModelView
 {
-    public class CreatedUser
+    public record class CreatedUser (string str)
     {
+
     }
 }

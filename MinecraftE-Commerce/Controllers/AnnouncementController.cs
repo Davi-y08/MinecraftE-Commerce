@@ -104,10 +104,8 @@ namespace MinecraftE_Commerce.Controllers
             annModel.UserName = username;
             annModel.UserPfp = userPfp;
             annModel.ImageAnnouncement = $"ImagesAnnouncements/{fileName}";
-            //await _annService.CreateAnnouncements(annModel);
 
             var responseCreated = await _annService.CreateAnnouncements(annModel);
-            //return Ok(new TokenGenerateModelView(tokenGenerate, user.Pfp));
 
             if (responseCreated == null)
             {
@@ -138,18 +136,6 @@ namespace MinecraftE_Commerce.Controllers
 
         public async Task<IActionResult> DeleteAnnouncement(int id)
         {
-            //string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-            //var user = await _userService.FindByNameAsync(userName!);
-            //string userId = user!.Id;
-            //var verifyAnnouncent = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == idAnnouncement);
-            //string beforeImage = verifyAnnouncent!.ImageAnnouncement;
-            //var idUserInAnnouncement = verifyAnnouncent!.UserId;
-
-            //if (userId != idUserInAnnouncement)
-            //{
-            //    return Forbid();
-            //}
-
             string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
 
             if (userName == null)
