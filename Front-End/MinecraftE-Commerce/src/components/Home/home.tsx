@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '//styles/home.css'
-import lupa from '//src/images/lupa.png'
+import lupa from 'src/images/lupa.png';
 
 function HomeMain(){
     const navigate = useNavigate();
