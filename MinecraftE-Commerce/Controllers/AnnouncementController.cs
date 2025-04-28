@@ -28,7 +28,7 @@ namespace MinecraftE_Commerce.Controllers
         public AnnouncementController(IAnnoucementService annService, UserManager<User> userService, AppDbContext context, IMailService mailSender, IMemoryCache memCache)
         {
             _annService = annService;
-            _context = context; 
+            _context = context;
             _userService = userService;
             _memCache = memCache;
             _mailSender = mailSender;
@@ -67,11 +67,11 @@ namespace MinecraftE_Commerce.Controllers
         [HttpPost("CreateAdd")]
         public async Task<IActionResult> CreateAnnouncement([FromForm] CreateAnnouncement createDto)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var image = createDto.ImageAnnouncement;
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);   
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
             var filepath = Path.Combine(Directory.GetCurrentDirectory(), "ImagesAnnouncements", fileName);
 
             using (var stream = new FileStream(filepath, FileMode.Create))
@@ -80,7 +80,7 @@ namespace MinecraftE_Commerce.Controllers
             }
 
             string? username = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-            if(username == null) return NotFound("User not found");
+            if (username == null) return NotFound("User not found");
 
             var user = await _userService.FindByNameAsync(username);
 
@@ -92,11 +92,11 @@ namespace MinecraftE_Commerce.Controllers
             {
                 return NotFound("pfp not found");
             }
-       
+
             var annModel = createDto.MapToCreateAnnouncement();
             annModel.UserId = user.Id.ToString();
 
-            if(user.Id == null)
+            if (user.Id == null)
             {
                 return NotFound("UserId not found");
             }
@@ -113,7 +113,7 @@ namespace MinecraftE_Commerce.Controllers
             }
 
             return Ok(new CreatedAd("Anúncio criado com sucesso"));
-            
+
         }
 
         [HttpGet("SearchAn")]
@@ -132,9 +132,9 @@ namespace MinecraftE_Commerce.Controllers
             return Ok(await announcements.ToListAsync());
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
 
-        public async Task<IActionResult> DeleteAnnouncement(int id)
+        public async Task<IActionResult> DeleteAnnouncement([FromRoute] int id)
         {
             string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
 
@@ -242,7 +242,7 @@ namespace MinecraftE_Commerce.Controllers
 
             var arrayToListBack = array.ToList();
 
-            return Ok(arrayToListBack);   
+            return Ok(arrayToListBack);
         }
     }
 }
