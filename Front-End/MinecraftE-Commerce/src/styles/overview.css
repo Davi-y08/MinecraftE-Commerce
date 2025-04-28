@@ -1,0 +1,49 @@
+*{
+    font-family: 'Roboto Mono', monospace;
+}
+
+.option{
+    width: 368px;
+    height: 753px;
+    background-color: #EBEBEB;
+    border: solid 1px black;
+    border-radius: 25px;
+    margin-top: 60px;
+    margin-left: 80px;
+    gap: 20px;
+}
+
+.menuOverView {
+    margin-top: 20px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menuOverView p {
+    font-size: 14px;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.menuOverView p:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+}
+
+.tituloOverView{
+    width: 90px;
+    height: 19px;
+    border-radius: 50px;
+    color: white;
+    background-color: #5C5C5C;
+    font-size: 13px;
+    font-weight: 300;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    text-align: center;
+}

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../styles/home.css';
+import '../../styles/overview.css';
 import lupa from '../images/lupa.png';
 
 function HomeMain(){
@@ -162,6 +163,20 @@ function HomeMain(){
             </div>
 
             </header>
+
+            <div className="option">
+                <div className="menuOverView">
+                    <h1 className="tituloOverView">Menu</h1>
+                    <p className="sobreMim">Sobre mim</p>
+                    <p className="meusAnuncios">Meus anúncios</p>
+                    <p className="minhasCompras">Minhas compras</p>
+                    <p className="configuracoes">Configurações</p>
+                    <p className="minhasVendas">Minhas vendas</p>
+                </div>  
+                <div className="profileOverView">
+                    <h1>Configurações</h1>
+                </div>
+            </div>
         </div>
     )
 }
