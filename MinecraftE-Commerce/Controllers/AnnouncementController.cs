@@ -37,7 +37,6 @@ namespace MinecraftE_Commerce.Controllers
 
 
         [HttpGet("{id:int}")]
-
         public async Task<IActionResult> GetAnnById(int id)
         {
             var announcement = await _annService.GetAnnouncementById(id);
@@ -167,6 +166,21 @@ namespace MinecraftE_Commerce.Controllers
                 return Ok(announcementDel);
             }
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> AddClickForAnnouncement([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var announcement = await _annService.GetAnnouncementById(id);
+
+            if (announcement == null)
+            {
+                return NotFound("Anúncio não encontrado");
+            }
+
+            return Ok();
+        } 
 
         [HttpPut]
         public async Task<IActionResult> EditAnnouncement([FromForm] EditAnnouncement annDto, int idAnnouncement)
