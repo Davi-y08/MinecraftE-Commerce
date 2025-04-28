@@ -17,7 +17,8 @@
 
 body{
     background-color: #FBFEFF;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .MenuLateral {

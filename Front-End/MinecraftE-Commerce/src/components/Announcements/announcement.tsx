@@ -2,8 +2,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import '../styles/card.css';
-import '../styles/annoucementPage.css';
+import '../../styles/annoucementPage.css';
+import '../../styles/card.css';
 import lupa from '../images/lupa.png';
 
 function AnnouncementPage(){

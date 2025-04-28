@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import '//styles/home.css'
-import lupa from 'src/images/lupa.png';
+import '../../styles/home.css';
+import lupa from '../images/lupa.png';
 
 function HomeMain(){
     const navigate = useNavigate();
@@ -159,17 +159,6 @@ function HomeMain(){
         }
     }
 
-   // const response = await fetch("https://localhost:7253/api/v1/Login", {
-       // method: "POST",
-      //  headers: {
-        //    "Content-Type": "application/json",
-        //    "Authorization": "Bearer " + token,
-       // },
-      //  body: JSON.stringify({
-           // 'emailforlogin': email,
-           // 'passwordforlogin': password
-        //}),
-   // });
 
    const sections = [
     {title : 'Plugins', data: plugins},
@@ -203,6 +192,7 @@ function HomeMain(){
                         />
                         <div className="infoAnuncio">
                             <img
+                                alt="Imagem do anuncio"
                                 className="userPfpInInfo"
                                 width={20}
                                 src={`https://localhost:7253/${announcement.userPfp}`}
@@ -258,7 +248,7 @@ function HomeMain(){
 
             </header>
             <div className="contentSite">
-            {sections.map(section => renderSection(section.title, section.data))}
+                {sections.map(section => renderSection(section.title, section.data))}
             </div>
         </div>
     )

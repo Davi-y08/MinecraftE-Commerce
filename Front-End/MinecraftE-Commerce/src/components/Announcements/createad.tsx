@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { useEffect } from "react";
+import { data } from "react-router-dom";
 
 function CreateAnnouncementPage() {
   const [title, setTitle] = useState("");
@@ -10,6 +11,7 @@ function CreateAnnouncementPage() {
   const [typeOfAnnouncement, setTypeOfAnnouncement] = useState('');
   const bearer = "Bearer " + localStorage.getItem("token");
   const [btnState, setBtnState] = useState('Enviar');
+  const [responseState, setResponseState] = useState('');
 
   const onFileChange = async (e: any) => {
     setFile(e.target.files[0]);
@@ -25,16 +27,17 @@ function CreateAnnouncementPage() {
           Authorization: bearer,
         },
         body: formData,
-      });
-      
-      if(response.status == 200 || 201){
-          const dataResponse = await response.json();
-          console.log("resposta: " + dataResponse);
-      }
+      })
+      const data = await response.json();
+      setResponseState(data.createdAdAction);
+      console.log(setResponseState);
+
+      return data;
 
     } else {
       alert("Preeencha todos os campos por favor!");
     }
+    
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -69,7 +72,7 @@ function CreateAnnouncementPage() {
     else{
       setBtnState('Enviar');
     }
-   })
+   });
 
   return (
     <div>
@@ -132,6 +135,13 @@ function CreateAnnouncementPage() {
         <button onClick={handleSubmit}>
           {btnState}
         </button>
+
+        {responseState && (
+        <h2 style={{ color: 'green', display: 'block' }}>
+          {responseState}
+        </h2>
+      )}
+        
     </div>
   );
 }
