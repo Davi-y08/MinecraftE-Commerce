@@ -139,7 +139,7 @@ function HomeMain(){
                 method: 'PUT',
             })
 
-            
+
         }  
 
     }

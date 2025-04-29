@@ -18,7 +18,7 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
         {
             var trintaDiasAtras = DateTime.UtcNow.AddDays(-30);
 
-            var totalClicks = await _context.Clickss.Where(c => c.Announcement.UserId == idUser && c.CreatedAt >= trintaDiasAtras).CountAsync();
+            var totalClicks = await _context.Clickss.Where(c => c.Announcement!.UserId == idUser && c.CreatedAt >= trintaDiasAtras).CountAsync();
 
             return totalClicks;
         }

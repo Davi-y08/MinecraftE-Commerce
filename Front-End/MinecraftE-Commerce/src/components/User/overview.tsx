@@ -13,6 +13,7 @@ function HomeMain(){
     let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins?', 'Que tal uma pesquisa', 'Gosta de criar mods?'];
     const randomIndex = Math.floor(Math.random() * arr.length);
     const randomElement = arr[randomIndex];
+    const [clicksInMouth, setClicksInMounth] = useState('');
 
     if (pfp == null && token == null) {
         notLog = "SignIn/SignUp"    
@@ -35,6 +36,8 @@ function HomeMain(){
     }
 
     useEffect(() => {
+
+        returnClicks();
 
         const handleClick = (event: MouseEvent) => {
             const menulateral = document.getElementById('menuLateral');
@@ -122,6 +125,20 @@ function HomeMain(){
             console.log(error);
         }
     }
+
+    async function returnClicks() {
+        const response = await fetch('https://localhost:7253/api/v1/cliquesem30dias', {
+            method: 'GET',
+            headers: {
+                "Authorization": "Bearer " + token,
+            }
+        })
+
+        const data = await response.json();
+        console.log(data);
+        setClicksInMounth(data);
+        console.log(clicksInMouth);
+    }
     
     return(
         <div className="appMain">
@@ -175,7 +192,7 @@ function HomeMain(){
 
             <div className="containerSobreMim">
                 <div className="clicks">
-                    <p>Seus anúncios tiveram 0 clicks ao total</p>
+                    <p>Seus anúncios tiveram {clicksInMouth} clicks ao total</p>
                 </div>
             </div>
         </div>

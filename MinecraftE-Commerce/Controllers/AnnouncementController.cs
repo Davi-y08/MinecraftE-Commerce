@@ -284,5 +284,23 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok(arrayToListBack);
         }
+
+        [HttpGet("cliquesem30dias")]
+        public async Task<IActionResult> GetClicksAnnouncementsIn30Days()
+        {
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await _userService.FindByNameAsync(userName!);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            string userId = user.Id!;
+
+            int clicks = await _annService.ClicksInMounth(userId);
+
+            return Ok(clicks);
+        }
     }
 }
