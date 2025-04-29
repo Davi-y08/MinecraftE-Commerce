@@ -179,7 +179,28 @@ namespace MinecraftE_Commerce.Controllers
                 return NotFound("Anúncio não encontrado");
             }
 
-            return Ok();
+
+            string? userName = ".";
+            string idUser = ".";
+            string idUserInAnnoucement = announcement.UserId;
+
+            if (Request.Headers.ContainsKey("Authorization"))
+            {
+                userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+                var user = await _userService.FindByNameAsync(userName!);
+                idUser = user!.Id;
+            }
+
+            if (!(idUser == idUserInAnnoucement))
+            {
+                announcement.Clicks += 1;
+
+                await _context.SaveChangesAsync();
+
+                return Ok("clique adicionado");
+            }
+
+            return BadRequest("Não foi possível adicionar o clique");
         } 
 
         [HttpPut]

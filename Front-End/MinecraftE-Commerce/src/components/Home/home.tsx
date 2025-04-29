@@ -118,8 +118,28 @@ function HomeMain(){
         }, [announcements])
     }       
 
-    function redirect(idAnnouncement: number){   
+    async function redirectAndAddMoreClick(idAnnouncement: number){   
+
         navigate(`/announcements/${idAnnouncement}`);
+
+        if(token !== null){
+            const addClicked = await fetch(`https://localhost:7253/api/v1/${idAnnouncement}`, {
+                method: 'PUT',
+                headers: {
+                    "Authorization": "Bearer " + token,
+                }
+            })
+
+            const data = await addClicked.json();
+            console.log(data);
+        }
+        
+        else{
+            const addClicked = await fetch(`https://localhost:7253/api/v1/${idAnnouncement}`, {
+                method: 'PUT',
+            })
+        }  
+        
     }
 
     function navToCreateAd(){
@@ -181,7 +201,7 @@ function HomeMain(){
             <div className="gridAnuncios">
                 {data.map((announcement) => (
                     <div
-                        onClick={() => redirect(announcement.id)}
+                        onClick={() => redirectAndAddMoreClick(announcement.id)}
                         className="cardAnnouncement"
                         key={announcement.id}
                     >

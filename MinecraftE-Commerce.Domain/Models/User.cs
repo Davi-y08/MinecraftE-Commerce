@@ -8,5 +8,7 @@ namespace MinecraftE_Commerce.Domain.Models
         public List<Sale>? Sales { get; set; }
         public List<Sale>? Compras { get; set; }
         public string Pfp { get; set; } = string.Empty;
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
     }
 }

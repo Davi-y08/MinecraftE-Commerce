@@ -19,6 +19,7 @@ function Login(){
                 'emailforlogin': email,
                 'passwordforlogin': password
             }),
+            credentials: 'include',
         });
         
     const data = await response.json();
@@ -28,10 +29,8 @@ function Login(){
 
     if (response.ok) {
         navigate('/');
-    }
-
-       
-    }
+    }  
+}
 
     const handleSubmit = (e: any) => {
         e.preventDefault();

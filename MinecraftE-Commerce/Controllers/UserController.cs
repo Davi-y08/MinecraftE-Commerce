@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -85,12 +86,62 @@ namespace MinecraftE_Commerce.Controllers
             if (responseLogin.Succeeded)
             {
                 var token = _tokenService.CreateToken(user);
+
+                var refreshToken = GenerateRefreshToken(); 
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(5);
+                await _userManager.UpdateAsync(user);
+
+                Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                });
+
                 var pfp = user.Pfp;
                 return Ok(new LoginSucessModelView(pfp, token));
             }
 
             string not = "not authorized";
             return BadRequest(new NoAuthorizedModelView(not));
+        }
+
+        [HttpPost("RefreshToken")]
+        
+        public async Task<IActionResult> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return Unauthorized(new { message = "Refresh token não encontrado" });
+            }
+
+            var user = await _userManager!.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+            if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            {
+                return Unauthorized(new { message = "Invalid refresh token" });
+            }
+
+            var newAccessToken = _tokenService.CreateToken(user);
+
+            var newRefreshToken = GenerateRefreshToken();
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(5);
+            await _userManager.UpdateAsync(user);
+
+            Response.Cookies.Append("refreshToken", newRefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(5),
+            });
+
+            return Ok(new { accessToken = newAccessToken });
         }
 
         [HttpGet("GetByName")]
@@ -112,6 +163,16 @@ namespace MinecraftE_Commerce.Controllers
             }
 
             return Ok(findUser);
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
 
         [HttpGet("GetAllUsers")]
