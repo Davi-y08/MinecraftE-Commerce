@@ -25,7 +25,6 @@ namespace MinecraftE_Commerce.Controllers
 
         [Authorize]
         [HttpPost]
-
         public async Task<IActionResult> CreateSale([FromBody] int idAnnouncement)
         {
             if (!ModelState.IsValid)

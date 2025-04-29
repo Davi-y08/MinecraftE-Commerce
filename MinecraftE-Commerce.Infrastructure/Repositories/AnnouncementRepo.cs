@@ -14,6 +14,15 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<int> ClicksInMounth(string idUser)
+        {
+            var trintaDiasAtras = DateTime.UtcNow.AddDays(-30);
+
+            var totalClicks = await _context.Clickss.Where(c => c.Announcement.UserId == idUser && c.CreatedAt >= trintaDiasAtras).CountAsync();
+
+            return totalClicks;
+        }
+
         public async Task<Announcement> CreateAnnouncements(Announcement annModel)
         {
 

@@ -193,8 +193,13 @@ namespace MinecraftE_Commerce.Controllers
 
             if (!(idUser == idUserInAnnoucement))
             {
-                announcement.Clicks += 1;
+                var newClick = new Clicks
+                {
+                    AnnouncementId = announcement.Id,
+                    CreatedAt = DateTime.UtcNow
+                };
 
+                await _context.Clickss.AddAsync(newClick);
                 await _context.SaveChangesAsync();
 
                 return Ok("clique adicionado");

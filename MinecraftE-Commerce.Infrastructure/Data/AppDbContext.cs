@@ -10,6 +10,7 @@ namespace MinecraftE_Commerce.Infrastructure.Data
 
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<Sale> Sales { get; set; }
+        public DbSet<Clicks> Clickss { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

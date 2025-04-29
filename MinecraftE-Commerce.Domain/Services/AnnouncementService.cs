@@ -11,7 +11,14 @@ namespace MinecraftE_Commerce.Domain.Services
         {
             _annService = annService;
         } 
-        
+
+        public async Task<int> ClicksInMounth(string idUser)
+        {
+            var clicks = await _annService.ClicksInMounth(idUser);
+
+            return clicks;
+        }
+
         public async Task<List<Announcement>> GetAllAnnouncements()
         {
             return await _annService.GetAllAnnouncements();

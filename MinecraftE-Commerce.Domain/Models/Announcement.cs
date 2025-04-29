@@ -17,7 +17,7 @@ namespace MinecraftE_Commerce.Domain.Models
         public string UserId { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string UserPfp { get; set; } = string.Empty;
-        public int Clicks { get; set; } = 0;
+        public ICollection<Clicks> Clickss { get; set; }
         public TypeOfAnnouncementEnum TypeOfAnnouncement { get; set; } 
     }
 }

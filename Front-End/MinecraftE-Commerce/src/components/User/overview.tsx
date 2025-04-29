@@ -86,10 +86,6 @@ function HomeMain(){
         typeOfAnnouncement: number
     }       
 
-    function redirect(idAnnouncement: number){   
-        navigate(`/announcements/${idAnnouncement}`);
-    }
-
     function navToCreateAd(){
         navigate('/createad');
     }
@@ -161,7 +157,6 @@ function HomeMain(){
                      isLogged && <button onClick={logout}>Sair</button>
                 }
             </div>
-
             </header>
 
             <div className="option">
@@ -175,6 +170,12 @@ function HomeMain(){
                 </div>  
                 <div className="profileOverView">
                     <h1>Configurações</h1>
+                </div>
+            </div>
+
+            <div className="containerSobreMim">
+                <div className="clicks">
+                    <p>Seus anúncios tiveram 0 clicks ao total</p>
                 </div>
             </div>
         </div>

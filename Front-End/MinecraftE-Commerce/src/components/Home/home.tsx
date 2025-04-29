@@ -138,8 +138,10 @@ function HomeMain(){
             const addClicked = await fetch(`https://localhost:7253/api/v1/${idAnnouncement}`, {
                 method: 'PUT',
             })
+
+            
         }  
-        
+
     }
 
     function navToCreateAd(){

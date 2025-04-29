@@ -10,5 +10,6 @@ namespace MinecraftE_Commerce.Domain.Interfaces
         Task<Announcement> EditAnnouncemenet(Announcement annModel, int id);
         Task<Announcement> DeleteAnnouncement(int id);
         Task<Announcement> ReadAndAddValueForSales(int id);
+        Task<int> ClicksInMounth(string idUser);
     }
 }
