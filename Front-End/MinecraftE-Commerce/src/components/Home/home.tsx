@@ -139,7 +139,8 @@ function HomeMain(){
                 method: 'PUT',
             })
 
-
+            const dataClicked = await addClicked.json();
+            console.log(dataClicked)
         }  
 
     }
