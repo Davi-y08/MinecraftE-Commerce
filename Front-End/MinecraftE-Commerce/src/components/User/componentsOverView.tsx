@@ -32,7 +32,7 @@ export function SobreMim(){
 export function MinhasCompras(){
     return(
         <div>
-
+            
         </div>
     )
 }
