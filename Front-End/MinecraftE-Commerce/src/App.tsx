@@ -5,6 +5,7 @@ import HomeMain from "./components/Home/home";
 import AnnouncementPage from "./components/Announcements/announcement";
 import CreateAnnouncementPage from "./components/Announcements/createad";
 import MyAnnouncementsPage from "./components/User/overview";
+import HelpPage from "./components/HelperPages/helpLoginAndRegister";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/announcements/:id" element = {<AnnouncementPage/>}/>
           <Route path="/createad" element = {<CreateAnnouncementPage/>}/>
           <Route path="/myAnnouncements" element = {<MyAnnouncementsPage/>}/>
+          <Route path="/notLogged" element = {<HelpPage/>}/>
         </Routes>
       </Router>
       </QueryClientProvider>

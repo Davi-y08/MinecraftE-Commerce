@@ -62,8 +62,13 @@ function HomeMain(){
         navigate('/login');
     }
     
-    async function myAnnouncementsPage() {
-        navigate('/myAnnouncements');
+    async function overViewPages() {
+        if(localStorage.getItem('token') === null){
+            navigate('/notLogged');
+        }
+        else {
+            navigate('/myAnnouncements');
+        }   
     }
 
     async function logout() {
@@ -246,7 +251,7 @@ function HomeMain(){
             <label className="lblSearch" htmlFor="inpSearch"><img width={27} height={27} src={lupa}/></label>
 
             <div className="links">
-                <a onClick={myAnnouncementsPage}>My announcements</a>
+                <a onClick={overViewPages}>My announcements</a>
                 <a href="#">About</a>
                 <a href="#">Terms of use</a>
                 <a href="https://github.com/Davi-y08/MinecraftE-Commerce">Project</a>
@@ -259,8 +264,8 @@ function HomeMain(){
             
             <div id="menuLateral" className="MenuLateral">
                 <img className="pfpInMenu" src={`https://localhost:7253/${pfp}`} width={45}/>
-                <button className="myProfile">My Profile</button>
-                <button className="myAds">My ads</button>
+                <button onClick={overViewPages} className="myProfile">My Profile</button>
+                <button  className="myAds">My ads</button>
                 <button className="darkTheme">Dark theme</button>
                 <button className="configs">Configs</button>
                 <button onClick={navToCreateAd} className="createAd">Create ad</button>

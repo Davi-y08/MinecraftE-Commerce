@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { useEffect } from "react";
-import { data } from "react-router-dom";
 
 function CreateAnnouncementPage() {
   const [title, setTitle] = useState("");

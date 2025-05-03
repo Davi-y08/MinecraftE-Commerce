@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../styles/home.css';
 import '../../styles/overview.css';
 import lupa from '../images/lupa.png';
+import { SobreMim, MinhasCompras, MeusAnuncios } from "./componentsOverView";
 
 function HomeMain(){
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ function HomeMain(){
     let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins?', 'Que tal uma pesquisa', 'Gosta de criar mods?'];
     const randomIndex = Math.floor(Math.random() * arr.length);
     const randomElement = arr[randomIndex];
-    const [clicksInMouth, setClicksInMounth] = useState('');
+    const [activeSection, setActiveSection] = useState('sobreMim');
 
     if (pfp == null && token == null) {
         notLog = "SignIn/SignUp"    
@@ -36,9 +37,6 @@ function HomeMain(){
     }
 
     useEffect(() => {
-
-        returnClicks();
-
         const handleClick = (event: MouseEvent) => {
             const menulateral = document.getElementById('menuLateral');
             if (menulateral && !menulateral.contains(event.target as Node)) {
@@ -126,19 +124,13 @@ function HomeMain(){
         }
     }
 
-    async function returnClicks() {
-        const response = await fetch('https://localhost:7253/api/v1/cliquesem30dias', {
-            method: 'GET',
-            headers: {
-                "Authorization": "Bearer " + token,
-            }
-        })
-
-        const data = await response.json();
-        console.log(data);
-        setClicksInMounth(data);
-        console.log(clicksInMouth);
-    }
+    const componentsMap: { [key: string]: JSX.Element } = {
+        sobreMim: <SobreMim />,
+        meusAnuncios: <MeusAnuncios />,
+        minhasCompras: <MinhasCompras />,
+        configuracoes: <h2>Configurações</h2>,
+        minhasVendas: <h2>Minhas Vendas</h2>,
+      };
     
     return(
         <div className="appMain">
@@ -177,23 +169,21 @@ function HomeMain(){
             </header>
 
             <div className="option">
-                <div className="menuOverView">
-                    <h1 className="tituloOverView">Menu</h1>
-                    <p className="sobreMim">Sobre mim</p>
-                    <p className="meusAnuncios">Meus anúncios</p>
-                    <p className="minhasCompras">Minhas compras</p>
-                    <p className="configuracoes">Configurações</p>
-                    <p className="minhasVendas">Minhas vendas</p>
-                </div>  
+            <div className="menuOverView">
+            <h1 className="tituloOverView">Menu</h1>
+          <p onClick={() => setActiveSection('sobreMim')} className="sobreMim">Sobre mim</p>
+          <p onClick={() => setActiveSection('meusAnuncios')} className="meusAnuncios">Meus anúncios</p>
+          <p onClick={() => setActiveSection('minhasCompras')} className="minhasCompras">Minhas compras</p>
+          <p onClick={() => setActiveSection('configuracoes')} className="configuracoes">Configurações</p>
+          <p onClick={() => setActiveSection('minhasVendas')} className="minhasVendas">Minhas vendas</p>
+</div>
                 <div className="profileOverView">
                     <h1>Configurações</h1>
                 </div>
             </div>
 
-            <div className="containerSobreMim">
-                <div className="clicks">
-                    <p>Seus anúncios tiveram {clicksInMouth} clicks ao total</p>
-                </div>
+            <div className="containerGeral">
+                 {componentsMap[activeSection]} 
             </div>
         </div>
     )
