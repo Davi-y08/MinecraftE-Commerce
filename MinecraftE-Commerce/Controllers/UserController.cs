@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using MinecraftE_Commerce.Application.Dtos.AnnouncementDto;
 using MinecraftE_Commerce.Application.Dtos.UserDto;
+using MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper;
 using MinecraftE_Commerce.Application.Mappers.SaleMappers;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
@@ -25,13 +27,15 @@ namespace MinecraftE_Commerce.Controllers
         private readonly ITokenService _tokenService;
         private readonly AppDbContext _context;
         private readonly IUserService _userService;
+        private readonly IAnnoucementService _annoucementService;
 
         public UserController(SignInManager<User>? inManger, 
             UserManager<User>? userManager, 
             ITokenService tokenService,
             AppDbContext context,
             IMemoryCache memCache,
-            IUserService userService)
+            IUserService userService,
+            IAnnoucementService annoucementService)
         {
             _InManger = inManger;
             _userManager = userManager;
@@ -39,6 +43,7 @@ namespace MinecraftE_Commerce.Controllers
             _context = context;
             _memCache = memCache;
             _userService = userService;
+            _annoucementService = annoucementService;
         }
 
         [HttpPost("Register")]
@@ -242,7 +247,26 @@ namespace MinecraftE_Commerce.Controllers
                 return NotFound("Nenhuma compra encontrada para este usuário.");
 
             var saleDto = listPurchases.Select(s => MapDisplaySale.MapToSaleDisplay(s)).ToList();
-            return Ok(saleDto);
+
+            var idAnnnouncements = listPurchases.
+                Select(s => s.AnnouncementId)
+                .ToList();
+
+            List<Announcement> listAnnouncements = new List<Announcement>();
+
+            for (int i = 0; i < listPurchases.Count(); i++)
+            {
+                int idAnnouncement = listPurchases[i].AnnouncementId;
+                var announcementById = await _annoucementService.GetAnnouncementById(idAnnouncement);
+                listAnnouncements.Add(announcementById);
+            }
+
+
+            var announcementDto = listAnnouncements
+            .Select(a => DisplayAnnouncement.MapToDisplay(a))
+            .ToList();
+
+            return Ok(announcementDto);
         }
     }
 }
