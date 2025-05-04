@@ -228,7 +228,9 @@ namespace MinecraftE_Commerce.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await _userManager!.FindByNameAsync(userName!);
+            string userId = user!.Id;
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("Usuário não identificado.");
