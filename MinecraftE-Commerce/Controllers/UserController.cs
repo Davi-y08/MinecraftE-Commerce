@@ -1,4 +1,7 @@
-﻿using System.Security.Cryptography;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,14 +23,21 @@ namespace MinecraftE_Commerce.Controllers
         private readonly UserManager<User>? _userManager;
         private readonly ITokenService _tokenService;
         private readonly AppDbContext _context;
+        private readonly IUserService _userService;
 
-        public UserController(SignInManager<User>? inManger, UserManager<User>? userManager, ITokenService tokenService, AppDbContext context, IMemoryCache memCache)
+        public UserController(SignInManager<User>? inManger, 
+            UserManager<User>? userManager, 
+            ITokenService tokenService,
+            AppDbContext context,
+            IMemoryCache memCache,
+            IUserService userService)
         {
             _InManger = inManger;
             _userManager = userManager;
             _tokenService = tokenService;
             _context = context;
             _memCache = memCache;
+            _userService = userService;
         }
 
         [HttpPost("Register")]
@@ -209,6 +219,26 @@ namespace MinecraftE_Commerce.Controllers
             }
 
             return Ok(new CreatedUser(retorno));
+        }
+
+        [Authorize]
+        [HttpGet("getPurchasesByUser")]
+        public async Task<IActionResult> getPurchasesByUser()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("Usuário não identificado.");
+
+            var listPurchases = await _userService.getSalesByUser(userId!);
+
+            if (listPurchases == null || !listPurchases.Any())
+                return NotFound("Nenhuma compra encontrada para este usuário.");
+
+            return Ok(listPurchases);
         }
     }
 }

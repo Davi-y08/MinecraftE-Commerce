@@ -21,6 +21,7 @@ builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAnnoucementService, AnnouncementRepo>();
 builder.Services.AddScoped<ISaleService, SaleRepo>();
+builder.Services.AddScoped<IUserService, UserRepository>();
 builder.Services.AddScoped<ITokenService, GenerateTokenJwt>();
 builder.Services.AddScoped<IMailService, MailSender>();
 var ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
