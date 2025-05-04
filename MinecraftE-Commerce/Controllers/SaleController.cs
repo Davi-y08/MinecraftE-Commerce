@@ -52,6 +52,11 @@ namespace MinecraftE_Commerce.Controllers
 
             decimal valueAnnouncement = announcement.PriceService;
 
+            if (idUserBuyer == idInAnnouncement)
+            {
+                return Unauthorized("Voce é criador do anuncio, nao pode compra-lo");
+            }
+
             var model = new Sale
             {
                 ReceiverId = idInAnnouncement,

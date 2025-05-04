@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using MinecraftE_Commerce.Application.Dtos.UserDto;
+using MinecraftE_Commerce.Application.Mappers.SaleMappers;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
 using MinecraftE_Commerce.Infrastructure.Data;
@@ -240,7 +241,8 @@ namespace MinecraftE_Commerce.Controllers
             if (listPurchases == null || !listPurchases.Any())
                 return NotFound("Nenhuma compra encontrada para este usuário.");
 
-            return Ok(listPurchases);
+            var saleDto = listPurchases.Select(s => MapDisplaySale.MapToSaleDisplay(s)).ToList();
+            return Ok(saleDto);
         }
     }
 }
