@@ -80,6 +80,15 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
             return search;
         }
 
+        public async Task<List<Announcement>> MyAnnouncement(string idUser)
+        {
+            List<Announcement> announcement = await _context.Announcements.Where(c => c.UserId == idUser).ToListAsync();
+
+            if (announcement == null) return null!;
+
+            return announcement;
+        }
+
         public async Task<Announcement> ReadAndAddValueForSales(int id)
         {
             var announcement = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == id);

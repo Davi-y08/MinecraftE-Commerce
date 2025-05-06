@@ -302,5 +302,32 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok(clicks);
         }
+
+        [Authorize]
+        [HttpGet("MeusAnuncios")]
+
+        public async Task<IActionResult> MyAnnouncements() 
+        {
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await _userService.FindByNameAsync(userName!);
+            string userId =  user!.Id;
+
+            if (user == null) 
+            {
+                return Unauthorized("Usuario nao encontrado");
+            }
+
+            List<Announcement> announcements = await _annService.MyAnnouncement(userId);
+
+            if (announcements == null) {
+                return BadRequest("Nenhum anuncio encontrado");
+            }
+
+            var announcementDto = announcements
+            .Select(a => DisplayAnnouncement.MapToDisplay(a))
+            .ToList();
+
+            return Ok(announcementDto);
+        }
     }
 }
