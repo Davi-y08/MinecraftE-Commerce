@@ -83,7 +83,7 @@ export function MinhasCompras(){
 export function MeusAnuncios(){
     return(
         <div>
-            
+            <p></p>
         </div>
     )
 }
