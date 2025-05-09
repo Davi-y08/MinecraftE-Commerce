@@ -81,9 +81,47 @@ export function MinhasCompras(){
 }
 
 export function MeusAnuncios(){
+    const token = localStorage.getItem('token');
+    const [meusAnuncios, setMeusAnuncios] = useState<Announcement[]>([]);
+
+    interface Announcement{
+        createdAt: string,
+        descripton: string,
+        id: number,
+        imageAnnouncement: string,
+        priceService: number,
+        title: string,
+        userId: string,
+        userName: string,
+        userPfp: string,
+        typeOfAnnouncement: number
+    }
+
+    async function myAnnouncements() {
+        const response = await axios.get('https://localhost:7253/api/v1/MeusAnuncios', {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+             }
+        }).then(response => {
+            setMeusAnuncios(response.data);
+        })
+    }
+
+    useEffect(() => {
+        myAnnouncements();
+    },[])
+
     return(
         <div>
-            <p></p>
+            <h2>Meus anuncios</h2>
+        {meusAnuncios.map(my => (
+            <div key={my.id}>
+                <h3>{my.title}</h3>
+                <p>{my.descripton}</p>
+                <p>Preço: R$ {my.priceService}</p>
+                <img src={my.imageAnnouncement} alt={my.title} width={200} />
+            </div>
+        ))}
         </div>
     )
 }
