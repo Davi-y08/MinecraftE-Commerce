@@ -10,6 +10,7 @@ using MinecraftE_Commerce.Application.Dtos.AnnouncementDto;
 using MinecraftE_Commerce.Application.Dtos.UserDto;
 using MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper;
 using MinecraftE_Commerce.Application.Mappers.SaleMappers;
+using MinecraftE_Commerce.Application.Mappers.UserMapper;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
 using MinecraftE_Commerce.Infrastructure.Data;
@@ -29,8 +30,8 @@ namespace MinecraftE_Commerce.Controllers
         private readonly IUserService _userService;
         private readonly IAnnoucementService _annoucementService;
 
-        public UserController(SignInManager<User>? inManger, 
-            UserManager<User>? userManager, 
+        public UserController(SignInManager<User>? inManger,
+            UserManager<User>? userManager,
             ITokenService tokenService,
             AppDbContext context,
             IMemoryCache memCache,
@@ -103,7 +104,7 @@ namespace MinecraftE_Commerce.Controllers
             {
                 var token = _tokenService.CreateToken(user);
 
-                var refreshToken = GenerateRefreshToken(); 
+                var refreshToken = GenerateRefreshToken();
                 user.RefreshToken = refreshToken;
                 user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(5);
                 await _userManager.UpdateAsync(user);
@@ -125,7 +126,7 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [HttpPost("RefreshToken")]
-        
+
         public async Task<IActionResult> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
@@ -198,7 +199,7 @@ namespace MinecraftE_Commerce.Controllers
 
 
             if (!_memCache.TryGetValue("users", out users!))
-            {                   
+            {
                 users = await _context.Users.ToListAsync();
 
                 var memCacheOptions = new MemoryCacheEntryOptions()
@@ -267,6 +268,30 @@ namespace MinecraftE_Commerce.Controllers
             .ToList();
 
             return Ok(announcementDto);
+        }
+
+        [Authorize]
+        [HttpPut("Mudar email")]
+        public async Task<IActionResult> changeEmail([FromForm] changeEmail emailDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var modelEmail = emailDto.MapToChangeEmail();
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await  _userManager!.FindByNameAsync(userName!);
+            string userEmail = user?.Email!;
+            string oldEmail = emailDto.oldEmail;
+
+            if (userEmail != oldEmail)
+            {
+                return Forbid("Emails diferentes.");
+            }
+
+            modelEmail.Email = emailDto.newEmail;
+
+            await _context.SaveChangesAsync();
+            return Ok(modelEmail);
         }
     }
 }

@@ -5,12 +5,20 @@ namespace MinecraftE_Commerce.Application.Mappers.UserMapper
 {
     public static class MapUserDisplay
     {
-        public static UserDisplay MapToUserDisplay(User userModel)
+        public static UserDisplay MapToUserDisplay(this User userModel)
         {
             return new UserDisplay
             {
                 Pfp = userModel.Pfp,
                 UserName = userModel.Pfp
+            };
+        }
+
+        public static User MapToChangeEmail(this changeEmail emailDto)
+        {
+            return new User
+            {
+                Email = emailDto.newEmail,
             };
         }
     }

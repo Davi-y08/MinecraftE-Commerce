@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import '../../styles/overview.css';
 
 export function SobreMim(){
     const token = localStorage.getItem('token');
@@ -73,7 +74,7 @@ export function MinhasCompras(){
                 <h3>{compra.title}</h3>
                 <p>{compra.descripton}</p>
                 <p>Preço: R$ {compra.priceService}</p>
-                <img src={compra.imageAnnouncement} alt={compra.title} width={200} />
+                <img src={`https://localhost:7253/${compra.imageAnnouncement}`} alt={compra.title} width={200} />
             </div>
         ))}
         </div>
@@ -115,11 +116,11 @@ export function MeusAnuncios(){
         <div>
             <h2>Meus anuncios</h2>
         {meusAnuncios.map(my => (
-            <div key={my.id}>
+            <div className="myAnnouncementsBox" key={my.id}>
                 <h3>{my.title}</h3>
                 <p>{my.descripton}</p>
                 <p>Preço: R$ {my.priceService}</p>
-                <img src={my.imageAnnouncement} alt={my.title} width={200} />
+                <img src={`https://localhost:7253/${my.imageAnnouncement}`} alt={my.title} width={200} />
             </div>
         ))}
         </div>
