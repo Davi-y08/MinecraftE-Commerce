@@ -293,5 +293,79 @@ namespace MinecraftE_Commerce.Controllers
             await _context.SaveChangesAsync();
             return Ok(modelEmail);
         }
+
+        [Authorize]
+        [HttpPut("Mudar pfp")]
+
+        public async Task<IActionResult> changePfp([FromForm] changePfp pfpDto)
+        {
+            try
+            {
+                if(!ModelState.IsValid)
+                    return BadRequest(ModelState);
+                var pfp = pfpDto.newPfp;
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(pfp.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Pfps", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await pfp.CopyToAsync(stream);
+                }
+
+                var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+                var user = await _userManager!.FindByNameAsync(userName!);
+                string userPfp = user!.Pfp;
+                user.Pfp = $"Pfps/{fileName}";
+                await _context.SaveChangesAsync();
+
+                return Ok("Pfp atualizada com sucesso.");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest("Erro");
+            }
+        }
     }
 }
+
+//[HttpPost("Register")]
+
+//public async Task<IActionResult> RegisterUser([FromForm] CreateUser userDto)
+//{
+//    try
+//    {
+//        if (!ModelState.IsValid)
+//            return BadRequest("Error in model state" + ModelState);
+
+//        var user = new User { UserName = userDto.UserName, Email = userDto.Email };
+
+//        var pfp = userDto.Pfp;
+//        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(pfp.FileName);
+//        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Pfps", fileName);
+
+//        using (var stream = new FileStream(filePath, FileMode.Create))
+//        {
+//            await pfp.CopyToAsync(stream);
+//        }
+
+//        var createUser = await _userManager!.CreateAsync(user, userDto.Password);
+
+//        if (createUser.Succeeded)
+//        {
+//            var tokenGenerate = _tokenService.CreateToken(user);
+//            user.Pfp = $"Pfps/{fileName}";
+//            _context.Users.Update(user);
+//            await _context.SaveChangesAsync();
+//            return Ok(new TokenGenerateModelView(tokenGenerate, user.Pfp));
+//        }
+
+//        else return BadRequest(createUser.Errors);
+//    }
+
+//    catch (Exception ex)
+//    {
+//        return BadRequest(ex.Message);
+//    }
+//}

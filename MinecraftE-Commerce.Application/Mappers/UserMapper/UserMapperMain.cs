@@ -3,7 +3,7 @@ using MinecraftE_Commerce.Domain.Models;
 
 namespace MinecraftE_Commerce.Application.Mappers.UserMapper
 {
-    public static class MapUserDisplay
+    public static class UserMapperMain
     {
         public static UserDisplay MapToUserDisplay(this User userModel)
         {
