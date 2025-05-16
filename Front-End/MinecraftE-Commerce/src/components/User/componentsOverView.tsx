@@ -52,7 +52,7 @@ export function MinhasCompras(){
     const token = localStorage.getItem('token');
     
     async function getCompras() {
-        const reponse = await axios.get('https://localhost:7253/api/v1/getPurchasesByUser', {
+        const response = await axios.get('https://localhost:7253/api/v1/getPurchasesByUser', {
             headers: {
                 'Authorization': 'Bearer ' + token,
             }
@@ -60,6 +60,8 @@ export function MinhasCompras(){
         .then(response => {
             setCompras(response.data);
         })
+
+        console.log(response);
     }
 
     useEffect(() => {
@@ -106,6 +108,8 @@ export function MeusAnuncios(){
         }).then(response => {
             setMeusAnuncios(response.data);
         })
+
+        console.log(response);
     }
 
     useEffect(() => {
