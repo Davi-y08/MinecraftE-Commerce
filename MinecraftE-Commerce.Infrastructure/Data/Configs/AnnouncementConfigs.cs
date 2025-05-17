@@ -31,5 +31,14 @@ namespace MinecraftE_Commerce.Infrastructure.Data.Configs
                 entity.Property(x => x.SaledOn).IsRequired();
             });
         }
+
+        public static void SetupImagesAnnouncement(ModelBuilder builder)
+        {
+            builder.Entity<ImagesAnnouncement>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Id).ValueGeneratedOnAdd();
+            });
+        }
     }
 }

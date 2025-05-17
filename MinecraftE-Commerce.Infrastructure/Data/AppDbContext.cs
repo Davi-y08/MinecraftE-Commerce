@@ -20,7 +20,7 @@ namespace MinecraftE_Commerce.Infrastructure.Data
 
             builder.Entity<ImagesAnnouncement>()
             .HasOne(p => p.Announcement)
-            .WithMany()
+            .WithMany(a => a.Images)
             .HasForeignKey(p => p.AnnouncementId)
             .OnDelete(DeleteBehavior.Cascade);
 

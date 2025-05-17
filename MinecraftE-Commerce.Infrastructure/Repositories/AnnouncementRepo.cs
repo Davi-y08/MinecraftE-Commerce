@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
 using MinecraftE_Commerce.Infrastructure.Data;
@@ -30,10 +31,17 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
 
         public async Task<Announcement> CreateAnnouncements(Announcement annModel)
         {
+            if (annModel.Images != null && annModel.Images.Any())
+            {
+                foreach (var image in annModel.Images)
+                {
+                    image.Announcement = annModel;
+                }
+            }
 
             await _context.Announcements.AddAsync(annModel);
             await _context.SaveChangesAsync();
-            
+
             return annModel;
         }
 

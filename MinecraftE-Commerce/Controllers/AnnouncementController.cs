@@ -180,11 +180,9 @@ namespace MinecraftE_Commerce.Controllers
             if (username == null) return NotFound("User not found");
 
             var user = await _userService.FindByNameAsync(username);
-
             if (user == null) return NotFound("Login not found");
 
             string userPfp = user.Pfp;
-
             if (userPfp == null)
             {
                 return NotFound("pfp not found");
@@ -210,7 +208,6 @@ namespace MinecraftE_Commerce.Controllers
             }
 
             return Ok(new CreatedAd("Anúncio criado com sucesso"));
-
         }
 
         [HttpDelete("{id:int}")]
@@ -288,77 +285,71 @@ namespace MinecraftE_Commerce.Controllers
             }
 
             return BadRequest("Não foi possível adicionar o clique");
-        } 
+        }
 
-        //[HttpPut]
-        //public async Task<IActionResult> EditAnnouncement([FromForm] EditAnnouncement annDto, int idAnnouncement)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
+        [HttpPut]
+        public async Task<IActionResult> EditAnnouncement([FromForm] EditAnnouncement annDto, int idAnnouncement)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        //    var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-        //    if (string.IsNullOrEmpty(userName))
-        //        return Unauthorized("Usuário não autenticado.");
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            if (string.IsNullOrEmpty(userName))
+                return Unauthorized("Usuário não autenticado.");
 
-        //    var user = await _userService.FindByNameAsync(userName);
-        //    if (user == null)
-        //        return Unauthorized("Usuário não encontrado.");
+            var user = await _userService.FindByNameAsync(userName);
+            if (user == null)
+                return Unauthorized("Usuário não encontrado.");
 
-        //    var announcement = await _context.Announcements
-        //        .Include(a => a.Images)
-        //        .FirstOrDefaultAsync(a => a.Id == idAnnouncement);
+            var announcement = await _context.Announcements
+                .Include(a => a.Images)
+                .FirstOrDefaultAsync(a => a.Id == idAnnouncement);
 
-        //    if (announcement == null)
-        //        return NotFound("Anúncio não encontrado.");
+            if (announcement == null)
+                return NotFound("Anúncio não encontrado.");
 
-        //    if (announcement.UserId != user.Id)
-        //        return Forbid("Você não tem permissão para editar este anúncio.");
+            if (announcement.UserId != user.Id)
+                return Forbid("Você não tem permissão para editar este anúncio.");
 
-        //    // Atualiza dados principais
-        //    announcement.Title = annDto.Title;
-        //    announcement.Descripton = annDto.Description;
-        //    announcement.PriceService = annDto.PriceService;
+            announcement.Title = annDto.Title;
+            announcement.Descripton = annDto.Description;
+            announcement.PriceService = annDto.PriceService;
 
-        //    if (annDto.Images != null)
-        //    {
+            if (annDto.Images != null && annDto.Images.Any())
+            {
+                foreach (var oldImage in announcement.Images)
+                {
+                    var fullPath = Path.Combine(Directory.GetCurrentDirectory(), oldImage.ImagePath);
+                    if (System.IO.File.Exists(fullPath))
+                        System.IO.File.Delete(fullPath);
+                }
 
-        //        foreach (var oldImage in announcement.Images)
-        //        {
-        //            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), oldImage.ImagePath);
-        //            if (System.IO.File.Exists(fullPath))
-        //                System.IO.File.Delete(fullPath);
-        //        }
+                _context.ImagesAnnouncements.RemoveRange(announcement.Images);
 
-        //        _context..RemoveRange(announcement.Images);
+                var newImages = new List<ImagesAnnouncement>();
+                foreach (var image in annDto.Images)
+                {
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                    var relativePath = Path.Combine("ImagesAnnouncements", fileName);
+                    var fullPath = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
 
-        //        var imagePaths = new List<ImagesAnnouncement>();
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
 
-        //        foreach (var image in annDto.Images)
-        //        {
-        //            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-        //            var relativePath = Path.Combine("ImagesAnnouncements", fileName);
-        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
+                    newImages.Add(new ImagesAnnouncement { ImagePath = relativePath });
+                }
 
-        //            using (var stream = new FileStream(filePath, FileMode.Create))
-        //            {
-        //                await image.CopyToAsync(stream);
-        //            }
+                announcement.Images = newImages;
+            }
 
-        //            imagePaths.Add(new ImagesAnnouncement { ImagePath = relativePath });
-        //        }
-        //    }
+            await _context.SaveChangesAsync();
 
-        //    else
-        //    {
-        //        modelAnn.Images = verifyAnnouncent.Images;
-        //    }
-
-        //    await _annService.EditAnnouncemenet(modelAnn, idAnnouncement);
-
-        //    return Ok();
-        //}
+            return Ok();
+        }
     }
 }
