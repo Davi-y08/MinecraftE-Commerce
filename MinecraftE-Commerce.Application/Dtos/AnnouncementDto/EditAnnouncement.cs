@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using Microsoft.AspNetCore.Http;
 using MinecraftE_Commerce.Domain.Enums.AnnouncementsEnums;
 
@@ -15,10 +16,10 @@ namespace MinecraftE_Commerce.Application.Dtos.AnnouncementDto
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public decimal PriceService { get; set; }
-        public IFormFile? ImageAnnouncement { get; set; } = null;
-        public string SameImage { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "The type of announcement id obrigatory")]
         public TypeOfAnnouncementEnum TypeAnnouncement { get; set; }
+
+        public List<IFormFile> Images { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
                 Title = addModel.Title,
                 Description = addModel.Descripton,
                 PriceService = addModel.PriceService,
-                ImageAnnouncement = addModel.ImageAnnouncement,
+                Images = addModel.Images?.ToList() ?? new List<ImagesAnnouncement>(),
                 CreatedAt = addModel.CreatedAt,
                 UserName = addModel.UserName,
                 UserPfp = addModel.UserPfp,

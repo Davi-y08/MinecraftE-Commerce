@@ -13,7 +13,7 @@ namespace MinecraftE_Commerce.Infrastructure.Data.Configs
                 entity.Property(x => x.Id).ValueGeneratedOnAdd();
                 entity.Property(x => x.Title).IsRequired();
                 entity.Property(x => x.Descripton).IsRequired();
-                entity.Property(x => x.ImageAnnouncement).IsRequired();
+                entity.Property(x => x.Images).IsRequired();
                 entity.Property(x => x.CreatedAt).IsRequired();
             });
         }

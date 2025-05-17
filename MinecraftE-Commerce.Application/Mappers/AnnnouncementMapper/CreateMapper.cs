@@ -7,14 +7,13 @@ namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
     {
         public static Announcement MapToCreateAnnouncement(this CreateAnnouncement createAdd)
         {
-            var toString = createAdd.ImageAnnouncement.ToString();
 
             return new Announcement
             {
                 Title = createAdd.Title,
                 Descripton = createAdd.Description,
                 CreatedAt = createAdd.CreatedAt,
-                ImageAnnouncement = toString!,
+                Images = new List<ImagesAnnouncement>(),
                 PriceService = createAdd.PriceService,
                 TypeOfAnnouncement = createAdd.TypeAnnouncement,
             };

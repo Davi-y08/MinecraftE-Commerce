@@ -14,7 +14,7 @@ namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
                 Title = editAdd.Title,
                 Descripton = editAdd.Description,
                 PriceService = editAdd.PriceService,
-                ImageAnnouncement = editAdd.SameImage,
+                Images = new List<ImagesAnnouncement>(),
                 TypeOfAnnouncement = editAdd.TypeAnnouncement,
             };
         }

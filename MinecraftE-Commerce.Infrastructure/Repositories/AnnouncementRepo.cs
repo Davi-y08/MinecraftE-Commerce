@@ -60,7 +60,7 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
             annoucementId.Title = annModel.Title;
             annoucementId.Descripton = annModel.Descripton;
             annoucementId.PriceService = annModel.PriceService;
-            annoucementId.ImageAnnouncement = annModel.ImageAnnouncement;
+            annoucementId.Images = annModel.Images;
 
             await _context.SaveChangesAsync();
 

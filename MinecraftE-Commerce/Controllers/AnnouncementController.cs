@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,96 @@ namespace MinecraftE_Commerce.Controllers
             return Ok(announcements);
         }
 
+
+        [HttpGet("SearchAn")]
+
+        public async Task<IActionResult> SearchAnnouncement(string strSearch)
+        {
+            if (strSearch == null) return BadRequest("The string is empty");
+
+            var announcements = from a in _context.Announcements select a;
+
+            if (!String.IsNullOrEmpty(strSearch))
+            {
+                announcements = announcements.Where(s => s.Title!.ToLower().Contains(strSearch.ToLower()));
+            }
+
+            return Ok(await announcements.ToListAsync());
+        }
+        [HttpGet("GetInRandomOrder")]
+        public async Task<IActionResult> ReturnAnnouncementInRandomOrder()
+        {
+            var announcements = await _annService.GetAllAnnouncements();
+            var array = announcements.ToArray();
+            int lengthArray = array.Length;
+            int[] numerosJaEscolhidos = new int[lengthArray];
+            List<int> numerosDisponiveis = Enumerable.Range(0, lengthArray).ToList();
+
+            Random rng = new Random();
+
+            for (int i = 0; i < lengthArray; i++)
+            {
+                int indexAleatorio = rng.Next(numerosDisponiveis.Count);
+                numerosJaEscolhidos[i] = numerosDisponiveis[indexAleatorio];
+                numerosDisponiveis.RemoveAt(indexAleatorio);
+            }
+
+            for (int i = lengthArray - 1; i > 0; i--)
+            {
+                int j = rng.Next(0, lengthArray);
+                (array[i], array[j]) = (array[j], array[i]);
+            }
+
+            var arrayToListBack = array.ToList();
+
+            return Ok(arrayToListBack);
+        }
+
+        [HttpGet("cliquesem30dias")]
+        public async Task<IActionResult> GetClicksAnnouncementsIn30Days()
+        {
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await _userService.FindByNameAsync(userName!);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            string userId = user.Id!;
+
+            int clicks = await _annService.ClicksInMounth(userId);
+
+            return Ok(clicks);
+        }
+
+        [Authorize]
+        [HttpGet("MeusAnuncios")]
+
+        public async Task<IActionResult> MyAnnouncements() 
+        {
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await _userService.FindByNameAsync(userName!);
+            string userId =  user!.Id;
+
+            if (user == null) 
+            {
+                return Unauthorized("Usuario nao encontrado");
+            }
+
+            List<Announcement> announcements = await _annService.MyAnnouncement(userId);
+
+            if (announcements == null) {
+                return BadRequest("Nenhum anuncio encontrado");
+            }
+
+            var announcementDto = announcements
+            .Select(a => DisplayAnnouncement.MapToDisplay(a))
+            .ToList();
+
+            return Ok(announcementDto);
+        }
+
         [Authorize]
         [HttpPost("CreateAdd")]
         public async Task<IActionResult> CreateAnnouncement([FromForm] CreateAnnouncement createDto)
@@ -69,13 +160,20 @@ namespace MinecraftE_Commerce.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var image = createDto.ImageAnnouncement;
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-            var filepath = Path.Combine(Directory.GetCurrentDirectory(), "ImagesAnnouncements", fileName);
+            var imagePaths = new List<ImagesAnnouncement>();
 
-            using (var stream = new FileStream(filepath, FileMode.Create))
+            foreach (var image in createDto.ImagesAnnouncements)
             {
-                await image.CopyToAsync(stream);
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                var relativePath = Path.Combine("ImagesAnnouncements", fileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(stream);
+                }
+
+                imagePaths.Add(new ImagesAnnouncement { ImagePath = relativePath });
             }
 
             string? username = User.FindFirstValue(JwtRegisteredClaimNames.Name);
@@ -102,7 +200,7 @@ namespace MinecraftE_Commerce.Controllers
 
             annModel.UserName = username;
             annModel.UserPfp = userPfp;
-            annModel.ImageAnnouncement = $"ImagesAnnouncements/{fileName}";
+            annModel.Images = imagePaths;
 
             var responseCreated = await _annService.CreateAnnouncements(annModel);
 
@@ -113,22 +211,6 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok(new CreatedAd("Anúncio criado com sucesso"));
 
-        }
-
-        [HttpGet("SearchAn")]
-
-        public async Task<IActionResult> SearchAnnouncement(string strSearch)
-        {
-            if (strSearch == null) return BadRequest("The string is empty");
-
-            var announcements = from a in _context.Announcements select a;
-
-            if (!String.IsNullOrEmpty(strSearch))
-            {
-                announcements = announcements.Where(s => s.Title!.ToLower().Contains(strSearch.ToLower()));
-            }
-
-            return Ok(await announcements.ToListAsync());
         }
 
         [HttpDelete("{id:int}")]
@@ -208,126 +290,75 @@ namespace MinecraftE_Commerce.Controllers
             return BadRequest("Não foi possível adicionar o clique");
         } 
 
-        [HttpPut]
-        public async Task<IActionResult> EditAnnouncement([FromForm] EditAnnouncement annDto, int idAnnouncement)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        //[HttpPut]
+        //public async Task<IActionResult> EditAnnouncement([FromForm] EditAnnouncement annDto, int idAnnouncement)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
 
-            string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-            var user = await _userService.FindByNameAsync(userName!);
-            string userId = user!.Id;
-            var verifyAnnouncent = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == idAnnouncement);
-            string beforeImage = verifyAnnouncent!.ImageAnnouncement;
-            var idUserInAnnouncement = verifyAnnouncent!.UserId;
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
 
-            if (userId != idUserInAnnouncement)
-            {
-                return Forbid();
-            }
+        //    var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+        //    if (string.IsNullOrEmpty(userName))
+        //        return Unauthorized("Usuário não autenticado.");
 
-            var modelAnn = annDto.MapToEditAnnouncement();
-            modelAnn.Title = annDto.Title;
-            modelAnn.Descripton = annDto.Description;
-            modelAnn.PriceService = annDto.PriceService;
+        //    var user = await _userService.FindByNameAsync(userName);
+        //    if (user == null)
+        //        return Unauthorized("Usuário não encontrado.");
 
-            if (annDto.ImageAnnouncement != null)
-            {
-                var newImage = annDto.ImageAnnouncement;
-                string pathImageTo = "C:\\Users\\oisyz\\source\\repos\\MinecraftE-Commerce\\MinecraftE-Commerce\\ImagesAnnouncements\\";
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(newImage!.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), pathImageTo, fileName);
+        //    var announcement = await _context.Announcements
+        //        .Include(a => a.Images)
+        //        .FirstOrDefaultAsync(a => a.Id == idAnnouncement);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await newImage.CopyToAsync(stream);
-                }
+        //    if (announcement == null)
+        //        return NotFound("Anúncio não encontrado.");
 
-                modelAnn.ImageAnnouncement = Path.Combine("ImagesAnnouncements", fileName);
-            }
+        //    if (announcement.UserId != user.Id)
+        //        return Forbid("Você não tem permissão para editar este anúncio.");
 
-            else
-            {
-                modelAnn.ImageAnnouncement = verifyAnnouncent.ImageAnnouncement;
-            }
+        //    // Atualiza dados principais
+        //    announcement.Title = annDto.Title;
+        //    announcement.Descripton = annDto.Description;
+        //    announcement.PriceService = annDto.PriceService;
 
-            await _annService.EditAnnouncemenet(modelAnn, idAnnouncement);
+        //    if (annDto.Images != null)
+        //    {
 
-            return Ok();
-        }
+        //        foreach (var oldImage in announcement.Images)
+        //        {
+        //            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), oldImage.ImagePath);
+        //            if (System.IO.File.Exists(fullPath))
+        //                System.IO.File.Delete(fullPath);
+        //        }
 
-        [HttpGet("GetInRandomOrder")]
-        public async Task<IActionResult> ReturnAnnouncementInRandomOrder()
-        {
-            var announcements = await _annService.GetAllAnnouncements();
-            var array = announcements.ToArray();
-            int lengthArray = array.Length;
-            int[] numerosJaEscolhidos = new int[lengthArray];
-            List<int> numerosDisponiveis = Enumerable.Range(0, lengthArray).ToList();
+        //        _context..RemoveRange(announcement.Images);
 
-            Random rng = new Random();
+        //        var imagePaths = new List<ImagesAnnouncement>();
 
-            for (int i = 0; i < lengthArray; i++)
-            {
-                int indexAleatorio = rng.Next(numerosDisponiveis.Count);
-                numerosJaEscolhidos[i] = numerosDisponiveis[indexAleatorio];
-                numerosDisponiveis.RemoveAt(indexAleatorio);
-            }
+        //        foreach (var image in annDto.Images)
+        //        {
+        //            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+        //            var relativePath = Path.Combine("ImagesAnnouncements", fileName);
+        //            var filePath = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
 
-            for (int i = lengthArray - 1; i > 0; i--)
-            {
-                int j = rng.Next(0, lengthArray);
-                (array[i], array[j]) = (array[j], array[i]);
-            }
+        //            using (var stream = new FileStream(filePath, FileMode.Create))
+        //            {
+        //                await image.CopyToAsync(stream);
+        //            }
 
-            var arrayToListBack = array.ToList();
+        //            imagePaths.Add(new ImagesAnnouncement { ImagePath = relativePath });
+        //        }
+        //    }
 
-            return Ok(arrayToListBack);
-        }
+        //    else
+        //    {
+        //        modelAnn.Images = verifyAnnouncent.Images;
+        //    }
 
-        [HttpGet("cliquesem30dias")]
-        public async Task<IActionResult> GetClicksAnnouncementsIn30Days()
-        {
-            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-            var user = await _userService.FindByNameAsync(userName!);
+        //    await _annService.EditAnnouncemenet(modelAnn, idAnnouncement);
 
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            string userId = user.Id!;
-
-            int clicks = await _annService.ClicksInMounth(userId);
-
-            return Ok(clicks);
-        }
-
-        [Authorize]
-        [HttpGet("MeusAnuncios")]
-
-        public async Task<IActionResult> MyAnnouncements() 
-        {
-            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-            var user = await _userService.FindByNameAsync(userName!);
-            string userId =  user!.Id;
-
-            if (user == null) 
-            {
-                return Unauthorized("Usuario nao encontrado");
-            }
-
-            List<Announcement> announcements = await _annService.MyAnnouncement(userId);
-
-            if (announcements == null) {
-                return BadRequest("Nenhum anuncio encontrado");
-            }
-
-            var announcementDto = announcements
-            .Select(a => DisplayAnnouncement.MapToDisplay(a))
-            .ToList();
-
-            return Ok(announcementDto);
-        }
+        //    return Ok();
+        //}
     }
 }

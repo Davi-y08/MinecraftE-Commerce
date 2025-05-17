@@ -1,4 +1,5 @@
 ﻿using MinecraftE_Commerce.Domain.Enums.AnnouncementsEnums;
+using MinecraftE_Commerce.Domain.Models;
 
 namespace MinecraftE_Commerce.Application.Dtos.AnnouncementDto
 {
@@ -8,7 +9,7 @@ namespace MinecraftE_Commerce.Application.Dtos.AnnouncementDto
         public string? Description { get; set; }
         public decimal PriceService { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string ImageAnnouncement { get; set; } = string.Empty;
+        public List<ImagesAnnouncement> Images { get; set; }
         public string UserName { get; set; } = string.Empty;
         public string UserPfp { get; set; } = string.Empty;
         public TypeOfAnnouncementEnum TypeAnnouncement { get; set; }

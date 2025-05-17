@@ -12,16 +12,23 @@ namespace MinecraftE_Commerce.Infrastructure.Data
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<Clicks> Clickss { get; set; }
+        public DbSet<ImagesAnnouncement> ImagesAnnouncements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<ImagesAnnouncement>()
+            .HasOne(p => p.Announcement)
+            .WithMany()
+            .HasForeignKey(p => p.AnnouncementId)
+            .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<Announcement>()
-       .HasOne(p => p.UserInfo)
-       .WithMany(p => p!.Announcements)
-       .HasForeignKey(p => p.UserId)
-       .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(p => p.UserInfo)
+            .WithMany(p => p!.Announcements)
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Sale>()
                 .HasOne(s => s.BuyerInfo)

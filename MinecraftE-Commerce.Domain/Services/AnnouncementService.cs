@@ -35,7 +35,7 @@ namespace MinecraftE_Commerce.Domain.Services
             newAnn.Id = announcement.Id;
             newAnn.UserId = announcement.UserId;
             newAnn.UserName = announcement.UserName;
-            newAnn.ImageAnnouncement = announcement.ImageAnnouncement;
+            newAnn.Images = announcement.Images;
             newAnn.Title = announcement.Title;
             newAnn.Descripton = announcement.Descripton;
 
@@ -48,7 +48,7 @@ namespace MinecraftE_Commerce.Domain.Services
             newAnn.Id = announcement.Id;
             newAnn.UserId = announcement.UserId;
             newAnn.UserName = announcement.UserName;
-            newAnn.ImageAnnouncement = announcement.ImageAnnouncement;
+            newAnn.Images = announcement.Images;
             newAnn.Title = announcement.Title;
             newAnn.Descripton = announcement.Descripton;
 
