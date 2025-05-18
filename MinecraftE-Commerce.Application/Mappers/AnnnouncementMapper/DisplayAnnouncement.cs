@@ -1,4 +1,5 @@
 ﻿using MinecraftE_Commerce.Application.Dtos.AnnouncementDto;
+using MinecraftE_Commerce.Application.Dtos.ImageDto;
 using MinecraftE_Commerce.Domain.Models;
 
 namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
@@ -9,10 +10,11 @@ namespace MinecraftE_Commerce.Application.Mappers.AnnnouncementMapper
         {
             return new AnnouncementDisplay
             {
+                Id = addModel.Id,
                 Title = addModel.Title,
                 Description = addModel.Descripton,
                 PriceService = addModel.PriceService,
-                Images = addModel.Images?.ToList() ?? new List<ImagesAnnouncement>(),
+                Images = addModel.Images?.Select(img => new ImageDtoDisplay { ImagePath = img.ImagePath }).ToList() ?? new List<ImageDtoDisplay>(),
                 CreatedAt = addModel.CreatedAt,
                 UserName = addModel.UserName,
                 UserPfp = addModel.UserPfp,

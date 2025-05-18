@@ -77,7 +77,8 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
 
         public async Task<List<Announcement>> GetAllAnnouncements()
         {
-            var returnGet = await _context.Announcements.ToListAsync();
+            var returnGet = await _context.Announcements.Include(a => a.Images).ToListAsync();
+
             return returnGet;
         }
 

@@ -41,8 +41,9 @@ namespace MinecraftE_Commerce.Controllers
         public async Task<IActionResult> GetAnnById(int id)
         {
             var announcement = await _annService.GetAnnouncementById(id);
+            string cacheKey = $"announcement_{id}";
 
-            if (!_memCache.TryGetValue("announcement", out announcement))
+            if (!_memCache.TryGetValue(cacheKey, out announcement))
             {
                 announcement = await _context.Announcements.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -103,8 +104,7 @@ namespace MinecraftE_Commerce.Controllers
                 (array[i], array[j]) = (array[j], array[i]);
             }
 
-            var arrayToListBack = array.ToList();
-
+            var arrayToListBack = array.Select(a => a.MapToDisplay()).ToList();
             return Ok(arrayToListBack);
         }
 
@@ -210,28 +210,25 @@ namespace MinecraftE_Commerce.Controllers
             return Ok(new CreatedAd("Anúncio criado com sucesso"));
         }
 
+        [Authorize]
         [HttpDelete("{id:int}")]
-
         public async Task<IActionResult> DeleteAnnouncement([FromRoute] int id)
         {
-            string? userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name); 
+            if (userName == null) return NotFound();
+            var user = _userService.FindByNameAsync(userName);
 
-            if (userName == null)
-            {
-                return Forbid();
-            }
+            if(user == null)
+                return NotFound("Usuario nao encontrado");
 
-            var user = await _userService.FindByNameAsync(userName!);
-            string userId = user!.Id;
+            string userId = user.Id.ToString();
 
             var verifyAnnouncement = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == id);
             int idAnnouncement = verifyAnnouncement!.Id;
             string userIDInAnnouncement = verifyAnnouncement.UserId;
 
             if (!(userId == userIDInAnnouncement))
-            {
                 return Forbid("Inautorizado");
-            }
 
             else
             {
@@ -266,8 +263,11 @@ namespace MinecraftE_Commerce.Controllers
             if (Request.Headers.ContainsKey("Authorization"))
             {
                 userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-                var user = await _userService.FindByNameAsync(userName!);
-                idUser = user!.Id;
+                if (userName == null) return NotFound();
+                var user = _userService.FindByNameAsync(userName);
+
+                idUser = user!.Id.ToString();
+
             }
 
             if (!(idUser == idUserInAnnoucement))
@@ -297,13 +297,11 @@ namespace MinecraftE_Commerce.Controllers
                 return BadRequest(ModelState);
 
             var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-            if (string.IsNullOrEmpty(userName))
-                return Unauthorized("Usuário não autenticado.");
+            if (userName == null) return NotFound();
+            var user = _userService.FindByNameAsync(userName);
 
-            var user = await _userService.FindByNameAsync(userName);
             if (user == null)
-                return Unauthorized("Usuário não encontrado.");
-
+                return NotFound("Usuario nao encontrado");
             var announcement = await _context.Announcements
                 .Include(a => a.Images)
                 .FirstOrDefaultAsync(a => a.Id == idAnnouncement);
@@ -311,7 +309,7 @@ namespace MinecraftE_Commerce.Controllers
             if (announcement == null)
                 return NotFound("Anúncio não encontrado.");
 
-            if (announcement.UserId != user.Id)
+            if (announcement.UserId != user.Id.ToString())
                 return Forbid("Você não tem permissão para editar este anúncio.");
 
             announcement.Title = annDto.Title;
