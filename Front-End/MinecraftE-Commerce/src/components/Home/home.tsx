@@ -77,18 +77,22 @@ function HomeMain(){
         location.reload();       
     }
 
-    interface Announcement{
-        createdAt: string,
-        descripton: string,
-        id: number,
-        imageAnnouncement: string,
-        priceService: number,
-        title: string,
-        userId: string,
-        userName: string,
-        userPfp: string,
-        typeOfAnnouncement: number
+    interface Image{
+        imagePath: string
     }
+
+    
+interface Announcement {
+  id: number;
+  title: string;
+  description: string;
+  priceService: number;
+  createdAt: string;
+  images: Image[];
+  userName: string;
+  userPfp: string;
+  typeAnnouncement: number;
+}
 
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [plugins, setPlugins] = useState<Announcement[]>([]);
@@ -100,17 +104,17 @@ function HomeMain(){
     const [skins, setSkins] = useState<Announcement[]>([]);
 
     async function display() {
-        const response = await axios.get('https://localhost:7253/api/v1/GetInRandomOrder');
-        const data: Announcement[] = await response.data;
+    const response = await axios.get('https://localhost:7253/api/v1/GetInRandomOrder');
+    const data: Announcement[] = response.data;
 
-        setPlugins(data.filter(a => a.typeOfAnnouncement === 0));
-        setMods(data.filter(a => a.typeOfAnnouncement === 1));
-        setConstrucoes(data.filter(a => a.typeOfAnnouncement === 2));
-        setServicos(data.filter(a => a.typeOfAnnouncement === 3));
-        setAjuda(data.filter(a => a.typeOfAnnouncement === 4));
-        setSeeds(data.filter(a => a.typeOfAnnouncement === 5));
-        setSkins(data.filter(a => a.typeOfAnnouncement === 6));
-    }
+    setPlugins(data.filter(a => a.typeAnnouncement === 0));
+    setMods(data.filter(a => a.typeAnnouncement === 1));
+    setConstrucoes(data.filter(a => a.typeAnnouncement === 2));
+    setServicos(data.filter(a => a.typeAnnouncement === 3));
+    setAjuda(data.filter(a => a.typeAnnouncement === 4));
+    setSeeds(data.filter(a => a.typeAnnouncement === 5));
+    setSkins(data.filter(a => a.typeAnnouncement === 6));
+}
 
     useEffect(() => {
         display(); 
@@ -216,7 +220,7 @@ function HomeMain(){
                         <img
                             width={100}
                             className="imageadd"
-                            src={`https://localhost:7253/${announcement.imageAnnouncement}`}
+                            src={`https://localhost:7253/${announcement.images[0].imagePath}`}
                         />
                         <div className="infoAnuncio">
                             <img
@@ -226,11 +230,11 @@ function HomeMain(){
                                 src={`https://localhost:7253/${announcement.userPfp}`}
                             />
                             <p className="title">{announcement.title}</p>
-                            <p className="description">{announcement.descripton}</p>
+                            <p className="description">{announcement.description}</p>
                             <small className="price">R$: {announcement.priceService}</small>
                             <br />
                             <small className="datetime">{announcement.createdAt}</small>
-                            <small className="type">Tipo: {announcement.typeOfAnnouncement}</small>
+                            <small className="type">Tipo: {announcement.typeAnnouncement}</small>
                         </div>
                     </div>
                 ))}

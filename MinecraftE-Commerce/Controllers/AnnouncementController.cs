@@ -61,7 +61,10 @@ namespace MinecraftE_Commerce.Controllers
         public async Task<IActionResult> GetAllAnnouncement()
         {
             var announcements = await _annService.GetAllAnnouncements();
-            return Ok(announcements);
+
+            var announcementsDto = announcements.Select(a => a.MapToDisplay());
+
+            return Ok(announcementsDto);
         }
 
 
