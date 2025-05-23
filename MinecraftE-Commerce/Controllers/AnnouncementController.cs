@@ -14,7 +14,7 @@ using MinecraftE_Commerce.Infra.Services;
 using MinecraftE_Commerce.Infrastructure.Data;
 using MinecraftE_Commerce.ModelView;
 
-namespace MinecraftE_Commerce.Controllers
+namespace MinecraftE_Commerce.Controllers   
 {
     [ApiController]
     [Route("api/v1")]
