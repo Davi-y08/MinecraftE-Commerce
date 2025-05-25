@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
+using MinecraftE_Commerce.Hub;
 using MinecraftE_Commerce.Infra.Services;
 using MinecraftE_Commerce.Infrastructure.Data;
 using MinecraftE_Commerce.Infrastructure.Repositories;
@@ -17,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAnnoucementService, AnnouncementRepo>();
@@ -133,5 +135,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chat");
 
 app.Run();

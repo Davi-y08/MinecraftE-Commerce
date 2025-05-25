@@ -15,5 +15,7 @@
 
         public DateTime SaledOn { get; set; } = DateTime.Now;
         public decimal AnnouncementPrice { get; set; }
+        public Chat Chat { get; set; }
+        public int ChatId { get; set; }
     }
 }

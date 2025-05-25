@@ -7,5 +7,7 @@
         public DateTime Send_at { get; set; } = DateTime.Now;
         public User User { get; set; }
         public string UserId { get; set; }
+        public Chat Chat { get; set; }
+        public int ChatId { get; set; }
     }
 }

@@ -16,11 +16,13 @@ namespace MinecraftE_Commerce.Controllers
         private readonly ISaleService _saleService;
         private readonly IAnnoucementService _annoucementService;
         private readonly UserManager<User> _userService;
-        public SaleController(ISaleService saleService, IAnnoucementService announcementService, UserManager<User> userService)
+        private readonly ChatService _chatService;
+        public SaleController(ISaleService saleService, IAnnoucementService announcementService, UserManager<User> userService, ChatService chatService)
         {
             _saleService = saleService;
             _annoucementService = announcementService;
             _userService = userService;
+            _chatService = chatService;
         }
 
         [Authorize]
@@ -69,6 +71,16 @@ namespace MinecraftE_Commerce.Controllers
             await _annoucementService.ReadAndAddValueForSales(idAnnouncement);
 
             await _saleService.CreateSale(model);
+
+            var chat = new Chat
+            {
+                SaleId = model.Id,
+                BuyerId = model.BuyerId,
+                ReceiverId = model.ReceiverId,
+                MyProperty = new List<Message>()
+            };
+
+            await _chatService.CreateChat(chat);
 
             return Ok("Compra efetuada com sucesso");
         }

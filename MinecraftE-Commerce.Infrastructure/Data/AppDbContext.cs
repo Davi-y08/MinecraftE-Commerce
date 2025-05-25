@@ -13,6 +13,8 @@ namespace MinecraftE_Commerce.Infrastructure.Data
         public DbSet<Sale> Sales { get; set; }
         public DbSet<Clicks> Clickss { get; set; }
         public DbSet<ImagesAnnouncement> ImagesAnnouncements { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -47,6 +49,11 @@ namespace MinecraftE_Commerce.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(s => s.AnnouncementId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Sale>()
+       .HasOne(s => s.Chat)
+       .WithOne(c => c.Sale)
+       .HasForeignKey<Chat>(c => c.SaleId);
         }
     }
 }

@@ -9,6 +9,6 @@
         public string ReceiverId { get; set; } = string.Empty;
         public User Buyer { get; set; }
         public string BuyerId { get; set; } = string.Empty;
-        public List<Message> MyProperty { get; set; }
+        public List<Message> MyProperty { get; set; } = new();
     }
 }
