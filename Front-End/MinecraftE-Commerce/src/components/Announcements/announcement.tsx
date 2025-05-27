@@ -179,6 +179,11 @@ async function pesquisarAnuncios(strSearch: string) {
         console.log(result);
     }
 
+    function chatRedirect(){
+        const responseId = 
+        navigate('/chat');
+    }
+
     return(
         <div>
 
@@ -227,6 +232,7 @@ async function pesquisarAnuncios(strSearch: string) {
                     <h1>Vendedor: {announcementAdd.userName}</h1>
                     <img width={100} src={`https://localhost:7253/${announcementAdd.userPfp}`}/>
                     <button onClick={() => buyFunction(announcementAdd.id)} className="btnComprar">{btnBuyState}{announcementAdd.priceService}</button>
+                    <button onClick={chatRedirect}>ir para o chat</button>
                 </div>
             )}        
         </div>

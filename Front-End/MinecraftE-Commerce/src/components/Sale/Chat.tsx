@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Chat({ connection }){
+function Chat(){
     const [userName, setUserName] = useState('');
     const [message, setMessage] = useState('');
 

@@ -4,6 +4,7 @@ using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
 using MinecraftE_Commerce.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 
 namespace MinecraftE_Commerce.Hub
@@ -21,10 +22,11 @@ namespace MinecraftE_Commerce.Hub
         }
         public async Task SendMessage(int chatId, string messageText)
         {
-            var sender = await _userService.GetUserAsync(Context.User!);
-
+            var senderName = Context.User!.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var sender = await _userService.FindByNameAsync(senderName!);
             var saleChat = await _saleService.GetChatByIdAsync(chatId);
-            if (saleChat == null || (saleChat.BuyerId != sender.Id && saleChat.ReceiverId != sender.Id))
+
+            if (saleChat == null || (saleChat.BuyerId != sender!.Id && saleChat.ReceiverId != sender.Id))
             {
                 throw new HubException("Usuário não pertence ao chat.");
             }
@@ -40,11 +42,11 @@ namespace MinecraftE_Commerce.Hub
 
             await Clients.Users(saleChat.BuyerId, saleChat.ReceiverId)
             .ReceiveMessage(new
-        {
-         ChatId = chatId,
-         Text = messageText,
-        SenderId = sender.Id,
-        SentAt = message.Send_at
+            {
+            ChatId = chatId,
+            Text = messageText,
+            SenderId = sender.Id,
+            SentAt = message.Send_at
             });
         }
     }

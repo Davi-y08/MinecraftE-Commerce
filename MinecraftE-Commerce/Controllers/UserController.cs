@@ -47,8 +47,17 @@ namespace MinecraftE_Commerce.Controllers
             _annoucementService = annoucementService;
         }
 
-        [HttpPost("Register")]
+        [Authorize]
+        [HttpGet("GetUserId")]
+        public async Task<IActionResult> GetUserId()
+        {
+            var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+            var user = await _userManager!.FindByNameAsync(userName!);
 
+            return Ok(user!.Id);
+        }
+
+        [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromForm] CreateUser userDto)
         {
             try

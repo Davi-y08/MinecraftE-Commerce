@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MinecraftE_Commerce.Application.Dtos.SaleDto;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
+using MinecraftE_Commerce.Infrastructure.Migrations;
 
 namespace MinecraftE_Commerce.Controllers
 {
@@ -80,7 +81,10 @@ namespace MinecraftE_Commerce.Controllers
                 MyProperty = new List<Message>()
             };
 
+            
             await _chatService.CreateChat(chat);
+
+            var chatId = sale.Chat.Id;
 
             return Ok("Compra efetuada com sucesso");
         }
