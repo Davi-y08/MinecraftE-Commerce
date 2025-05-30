@@ -27,7 +27,7 @@ namespace MinecraftE_Commerce.Controllers
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("CriarVenda")]
         public async Task<IActionResult> CreateSale([FromBody] int idAnnouncement)
         {
             if (!ModelState.IsValid)
@@ -71,22 +71,23 @@ namespace MinecraftE_Commerce.Controllers
 
             await _annoucementService.ReadAndAddValueForSales(idAnnouncement);
 
-            await _saleService.CreateSale(model);
+            var savedSale = await _saleService.CreateSale(model); 
 
             var chat = new Chat
             {
-                SaleId = model.Id,
-                BuyerId = model.BuyerId,
-                ReceiverId = model.ReceiverId,
+                SaleId = savedSale.Id,
+                BuyerId = savedSale.BuyerId,
+                ReceiverId = savedSale.ReceiverId,
                 MyProperty = new List<Message>()
             };
 
-            
             await _chatService.CreateChat(chat);
 
-            var chatId = sale.Chat.Id;
-
-            return Ok("Compra efetuada com sucesso");
+            return Ok(new
+            {
+                message = "Compra efetuada com sucesso",
+                chatId = chat.Id
+            });
         }
 
         [HttpGet("GetAllSales")]
