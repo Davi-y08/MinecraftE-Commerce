@@ -12,6 +12,7 @@ using MinecraftE_Commerce.Infra.Services;
 using MinecraftE_Commerce.Infrastructure.Data;
 using MinecraftE_Commerce.Infrastructure.Repositories;
 using MinecraftE_Commerce.Infrastructure.Services.TokenServices;
+using MinecraftE_Commerce.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,18 @@ builder.Services.AddScoped<ISaleService, SaleRepo>();
 builder.Services.AddScoped<IUserService, UserRepository>();
 builder.Services.AddScoped<ITokenService, GenerateTokenJwt>();
 builder.Services.AddScoped<IMailService, MailSender>();
+builder.Services.AddScoped<ChatService, ChatRepo>();
 var ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+})
+.AddHubOptions<ChatHub>(options =>
+{
+    options.UserIdProvider = new CustomUserIdProvider();
+});
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -62,6 +74,23 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = issuer,
         ValidAudience = audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            // Se for uma requisição para o Hub
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+            {
+                context.Token = accessToken;
+            }
+
+            return Task.CompletedTask;
+        }
     };
 });
 

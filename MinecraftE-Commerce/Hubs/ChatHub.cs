@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace MinecraftE_Commerce.Hub
 {
-    public class ChatHub : Hub<HubProvider>
+    public class ChatHub : Hub<IHubClient>
     {
         private readonly ISaleService _saleService;
         private readonly IAnnoucementService _annoucementService;
@@ -22,11 +22,17 @@ namespace MinecraftE_Commerce.Hub
         }
         public async Task SendMessage(int chatId, string messageText)
         {
-            var senderName = Context.User!.FindFirstValue(JwtRegisteredClaimNames.Name);
-            var sender = await _userService.FindByNameAsync(senderName!);
+            var senderName = Context.User?.FindFirstValue(JwtRegisteredClaimNames.Name);
+            if (string.IsNullOrEmpty(senderName))
+                throw new HubException("Usuário não autenticado.");
+
+            var sender = await _userService.FindByNameAsync(senderName);
+            if (sender == null)
+                throw new HubException("Usuário não encontrado.");
+
             var saleChat = await _saleService.GetChatByIdAsync(chatId);
 
-            if (saleChat == null || (saleChat.BuyerId != sender!.Id && saleChat.ReceiverId != sender.Id))
+            if (saleChat == null || (saleChat.BuyerId != sender.Id && saleChat.ReceiverId != sender.Id))
             {
                 throw new HubException("Usuário não pertence ao chat.");
             }
@@ -35,19 +41,25 @@ namespace MinecraftE_Commerce.Hub
             {
                 ChatId = chatId,
                 MessageString = messageText,
-                Send_at = DateTime.Now,
+                Send_at = DateTime.UtcNow,
                 UserId = sender.Id,
                 User = sender
             };
 
-            await Clients.Users(saleChat.BuyerId, saleChat.ReceiverId)
-            .ReceiveMessage(new
+            await _saleService.AddMessageAsync(message);
+
+            foreach (var userId in new[] { saleChat.BuyerId, saleChat.ReceiverId })
             {
-            ChatId = chatId,
-            Text = messageText,
-            SenderId = sender.Id,
-            SentAt = message.Send_at
-            });
+                await Clients.User(userId).ReceiveMessage(new
+                {
+                    chatId = chatId,
+                    text = messageText,
+                    senderId = sender.Id,
+                    sentAt = message.Send_at.ToString("o")
+                });
+            }
         }
+
+
     }
 }

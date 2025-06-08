@@ -9,5 +9,7 @@ namespace MinecraftE_Commerce.Domain.Interfaces
         Task<Sale> StatusSale(bool status);
         Task<List<Sale>> IsBought(int idAnnouncement);
         Task<Chat?> GetChatByIdAsync(int chatId);
+
+        Task AddMessageAsync(Message message);
     }
 }

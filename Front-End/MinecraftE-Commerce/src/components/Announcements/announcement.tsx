@@ -178,6 +178,44 @@ async function pesquisarAnuncios(strSearch: string) {
 
         console.log(result);
     }
+
+    async function chatRedirect(idAnnouncement: number) {
+    if (!token) {
+        alert("Faça login para acessar o chat");
+        return;
+    }
+
+    // Requisitar o chat (criar ou obter) para o anúncio
+    try {
+        const response = await fetch('https://localhost:7253/api/v2/GetOrCreateChat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': bearer
+            },
+            body: JSON.stringify(idAnnouncement)
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const chatId = data.chatId;
+
+           
+            const dataAxios = await axios.get('https://localhost:7253/api/v1/GetUserId', {
+                headers: { 'Authorization': bearer }
+            });
+
+            const userId = dataAxios.data;
+
+            navigate(`/chatSale/${userId}/${chatId}`);
+        } else {
+            alert("Erro ao acessar o chat");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Erro ao acessar o chat");
+    }
+}
     return(
         <div>
 

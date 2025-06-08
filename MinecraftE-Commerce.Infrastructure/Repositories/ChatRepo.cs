@@ -26,5 +26,14 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return chat;
         }
+
+        public async Task<Chat?> GetChatByParticipantsAsync(string buyerId, string receiverId, int announcementId)
+        {
+            return await _context.Chats
+                .FirstOrDefaultAsync(c =>
+                    c.BuyerId == buyerId &&
+                    c.ReceiverId == receiverId &&
+                    c.AnnouncementId == announcementId);
+        }
     }
 }

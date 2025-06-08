@@ -54,5 +54,11 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
         {
             throw new NotImplementedException();
         }
+        public async Task AddMessageAsync(Message message)
+        {
+            await _context.Messages.AddAsync(message);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

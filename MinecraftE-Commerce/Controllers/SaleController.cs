@@ -139,7 +139,47 @@ namespace MinecraftE_Commerce.Controllers
             }
 
             return Ok(wasBoughtByUser);
-
         }
+
+        [Authorize]
+[HttpPost("GetOrCreateChat")]
+public async Task<IActionResult> GetOrCreateChat([FromBody] int idAnnouncement)
+{
+    var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+    if (userName == null)
+        return Unauthorized();
+
+    var buyer = await _userService.FindByNameAsync(userName);
+    if (buyer == null)
+        return Unauthorized("Usuário não encontrado.");
+
+    var announcement = await _annoucementService.GetAnnouncementById(idAnnouncement);
+    if (announcement == null)
+        return NotFound("Anúncio não encontrado.");
+
+    if (announcement.UserId == buyer.Id)
+        return BadRequest("Você é o dono do anúncio.");
+
+    // Verifica se já existe um chat entre comprador e vendedor para esse anúncio
+    var existingChat = await _chatService.GetChatByParticipantsAsync(buyer.Id, announcement.UserId, idAnnouncement);
+    if (existingChat != null)
+    {
+        return Ok(new { chatId = existingChat.Id });
+    }
+
+    // Cria novo chat
+    var chat = new Chat
+    {
+        BuyerId = buyer.Id,
+        ReceiverId = announcement.UserId,
+        SaleId = null,
+        AnnouncementId = idAnnouncement,
+        MyProperty = new List<Message>()
+    };
+
+    await _chatService.CreateChat(chat);
+
+    return Ok(new { chatId = chat.Id });
+}
     }
 }
