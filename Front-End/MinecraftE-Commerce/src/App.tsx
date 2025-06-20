@@ -6,7 +6,7 @@ import AnnouncementPage from "./components/Announcements/announcement";
 import CreateAnnouncementPage from "./components/Announcements/createad";
 import MyAnnouncementsPage from "./components/User/overview";
 import HelpPage from "./components/HelperPages/helpLoginAndRegister";
-import Chat from "./components/Sale/Chat";
+
 function App() {
 
   const queryClient = new QueryClient();
@@ -22,7 +22,6 @@ function App() {
           <Route path="/createad" element = {<CreateAnnouncementPage/>}/>
           <Route path="/myAnnouncements" element = {<MyAnnouncementsPage/>}/>
           <Route path="/notLogged" element = {<HelpPage/>}/>
-          <Route path="/chatSale/:idUser/:chatId" element = {<Chat/>}/>
         </Routes>
       </Router>
       </QueryClientProvider>
