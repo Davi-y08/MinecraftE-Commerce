@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MinecraftE_Commerce.Application.Dtos.SaleDto;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
-using MinecraftE_Commerce.Infrastructure.Migrations;
+
 
 namespace MinecraftE_Commerce.Controllers
 {
@@ -17,13 +17,11 @@ namespace MinecraftE_Commerce.Controllers
         private readonly ISaleService _saleService;
         private readonly IAnnoucementService _annoucementService;
         private readonly UserManager<User> _userService;
-        private readonly ChatService _chatService;
-        public SaleController(ISaleService saleService, IAnnoucementService announcementService, UserManager<User> userService, ChatService chatService)
+        public SaleController(ISaleService saleService, IAnnoucementService announcementService, UserManager<User> userService)
         {
             _saleService = saleService;
             _annoucementService = announcementService;
             _userService = userService;
-            _chatService = chatService;
         }
 
         [Authorize]
@@ -73,20 +71,9 @@ namespace MinecraftE_Commerce.Controllers
 
             var savedSale = await _saleService.CreateSale(model); 
 
-            var chat = new Chat
-            {
-                SaleId = savedSale.Id,
-                BuyerId = savedSale.BuyerId,
-                ReceiverId = savedSale.ReceiverId,
-                MyProperty = new List<Message>()
-            };
-
-            await _chatService.CreateChat(chat);
-
             return Ok(new
             {
                 message = "Compra efetuada com sucesso",
-                chatId = chat.Id
             });
         }
 
@@ -140,46 +127,5 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok(wasBoughtByUser);
         }
-
-        [Authorize]
-[HttpPost("GetOrCreateChat")]
-public async Task<IActionResult> GetOrCreateChat([FromBody] int idAnnouncement)
-{
-    var userName = User.FindFirstValue(JwtRegisteredClaimNames.Name);
-    if (userName == null)
-        return Unauthorized();
-
-    var buyer = await _userService.FindByNameAsync(userName);
-    if (buyer == null)
-        return Unauthorized("Usuário não encontrado.");
-
-    var announcement = await _annoucementService.GetAnnouncementById(idAnnouncement);
-    if (announcement == null)
-        return NotFound("Anúncio não encontrado.");
-
-    if (announcement.UserId == buyer.Id)
-        return BadRequest("Você é o dono do anúncio.");
-
-    // Verifica se já existe um chat entre comprador e vendedor para esse anúncio
-    var existingChat = await _chatService.GetChatByParticipantsAsync(buyer.Id, announcement.UserId, idAnnouncement);
-    if (existingChat != null)
-    {
-        return Ok(new { chatId = existingChat.Id });
-    }
-
-    // Cria novo chat
-    var chat = new Chat
-    {
-        BuyerId = buyer.Id,
-        ReceiverId = announcement.UserId,
-        SaleId = null,
-        AnnouncementId = idAnnouncement,
-        MyProperty = new List<Message>()
-    };
-
-    await _chatService.CreateChat(chat);
-
-    return Ok(new { chatId = chat.Id });
-}
     }
 }

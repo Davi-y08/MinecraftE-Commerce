@@ -7,12 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MinecraftE_Commerce.Domain.Interfaces;
 using MinecraftE_Commerce.Domain.Models;
-using MinecraftE_Commerce.Hub;
 using MinecraftE_Commerce.Infra.Services;
 using MinecraftE_Commerce.Infrastructure.Data;
 using MinecraftE_Commerce.Infrastructure.Repositories;
 using MinecraftE_Commerce.Infrastructure.Services.TokenServices;
-using MinecraftE_Commerce.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,18 +25,7 @@ builder.Services.AddScoped<ISaleService, SaleRepo>();
 builder.Services.AddScoped<IUserService, UserRepository>();
 builder.Services.AddScoped<ITokenService, GenerateTokenJwt>();
 builder.Services.AddScoped<IMailService, MailSender>();
-builder.Services.AddScoped<ChatService, ChatRepo>();
 var ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-
-builder.Services.AddSignalR(options =>
-{
-    options.EnableDetailedErrors = true;
-})
-.AddHubOptions<ChatHub>(options =>
-{
-    options.UserIdProvider = new CustomUserIdProvider();
-});
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -164,7 +151,5 @@ app.UseStaticFiles(new StaticFileOptions
 
 
 app.MapControllers();
-
-app.MapHub<ChatHub>("/chat");
 
 app.Run();

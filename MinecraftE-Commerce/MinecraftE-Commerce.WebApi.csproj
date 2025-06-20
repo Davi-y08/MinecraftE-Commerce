@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="ImagesAnnouncements\" />
+    <Folder Include="Interfaces\" />
     <Folder Include="Pfps\" />
   </ItemGroup>
 

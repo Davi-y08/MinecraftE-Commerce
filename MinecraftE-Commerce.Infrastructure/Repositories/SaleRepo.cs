@@ -29,14 +29,6 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
             return sales;
         }
 
-        public async Task<Chat?> GetChatByIdAsync(int chatId)
-        {
-            return await _context.Chats
-            .Include(c => c.Buyer)
-            .Include(c => c.Receiver)
-            .Include(c => c.Sale)
-            .FirstOrDefaultAsync(c => c.Id == chatId);
-        }
 
         public async Task<List<Sale>> IsBought(int idAnnouncement)
         {
@@ -53,11 +45,6 @@ namespace MinecraftE_Commerce.Infrastructure.Repositories
         public Task<Sale> StatusSale(bool status)
         {
             throw new NotImplementedException();
-        }
-        public async Task AddMessageAsync(Message message)
-        {
-            await _context.Messages.AddAsync(message);
-            await _context.SaveChangesAsync();
         }
 
     }

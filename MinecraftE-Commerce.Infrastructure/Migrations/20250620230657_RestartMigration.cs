@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MinecraftE_Commerce.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Sales : Migration
+    public partial class RestartMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,6 +42,9 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Pfp = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    RefreshToken = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -106,8 +109,6 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Descripton = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImageAnnouncement = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     PriceService = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     Sales = table.Column<int>(type: "int", nullable: false),
@@ -116,7 +117,8 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     UserName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserPfp = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TypeOfAnnouncement = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -233,6 +235,49 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Clickss",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    AnnouncementId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clickss", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Clickss_Announcements_AnnouncementId",
+                        column: x => x.AnnouncementId,
+                        principalTable: "Announcements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ImagesAnnouncements",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ImagePath = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AnnouncementId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImagesAnnouncements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ImagesAnnouncements_Announcements_AnnouncementId",
+                        column: x => x.AnnouncementId,
+                        principalTable: "Announcements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Sales",
                 columns: table => new
                 {
@@ -313,6 +358,16 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Clickss_AnnouncementId",
+                table: "Clickss",
+                column: "AnnouncementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ImagesAnnouncements_AnnouncementId",
+                table: "ImagesAnnouncements",
+                column: "AnnouncementId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sales_AnnouncementId",
                 table: "Sales",
                 column: "AnnouncementId");
@@ -345,6 +400,12 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Clickss");
+
+            migrationBuilder.DropTable(
+                name: "ImagesAnnouncements");
 
             migrationBuilder.DropTable(
                 name: "Sales");

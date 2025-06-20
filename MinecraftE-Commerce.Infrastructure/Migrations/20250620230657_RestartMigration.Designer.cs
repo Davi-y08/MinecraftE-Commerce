@@ -11,8 +11,8 @@ using MinecraftE_Commerce.Infrastructure.Data;
 namespace MinecraftE_Commerce.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250517160104_images2")]
-    partial class images2
+    [Migration("20250620230657_RestartMigration")]
+    partial class RestartMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

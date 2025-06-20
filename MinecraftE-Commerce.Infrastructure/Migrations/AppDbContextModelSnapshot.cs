@@ -192,38 +192,6 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.ToTable("Announcements");
                 });
 
-            modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Chat", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AnnouncementId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("BuyerId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int?>("SaleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BuyerId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SaleId")
-                        .IsUnique();
-
-                    b.ToTable("Chats");
-                });
-
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Clicks", b =>
                 {
                     b.Property<int>("Id")
@@ -263,35 +231,6 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.ToTable("ImagesAnnouncements");
                 });
 
-            modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MessageString")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Send_at")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Sale", b =>
                 {
                     b.Property<int>("Id")
@@ -307,9 +246,6 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.Property<string>("BuyerId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
-
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ReceiverId")
                         .IsRequired()
@@ -465,31 +401,6 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.Navigation("UserInfo");
                 });
 
-            modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Chat", b =>
-                {
-                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "Buyer")
-                        .WithMany()
-                        .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "Receiver")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MinecraftE_Commerce.Domain.Models.Sale", "Sale")
-                        .WithOne("Chat")
-                        .HasForeignKey("MinecraftE_Commerce.Domain.Models.Chat", "SaleId");
-
-                    b.Navigation("Buyer");
-
-                    b.Navigation("Receiver");
-
-                    b.Navigation("Sale");
-                });
-
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Clicks", b =>
                 {
                     b.HasOne("MinecraftE_Commerce.Domain.Models.Announcement", "Announcement")
@@ -510,25 +421,6 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Announcement");
-                });
-
-            modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Message", b =>
-                {
-                    b.HasOne("MinecraftE_Commerce.Domain.Models.Chat", "Chat")
-                        .WithMany("MyProperty")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MinecraftE_Commerce.Domain.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Sale", b =>
@@ -563,17 +455,6 @@ namespace MinecraftE_Commerce.Infrastructure.Migrations
                     b.Navigation("Clickss");
 
                     b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Chat", b =>
-                {
-                    b.Navigation("MyProperty");
-                });
-
-            modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.Sale", b =>
-                {
-                    b.Navigation("Chat")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("MinecraftE_Commerce.Domain.Models.User", b =>
