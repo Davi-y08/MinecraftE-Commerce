@@ -1,14 +1,12 @@
 //Imports
 //****************//
 
-
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../styles/home.css';
-import lupa from '../images/lupa.png';
 import UserMenu from "./UserMenu";
 import SectionAnnouncements from "./SectionAnnouncements";
+import Search from "./search";
 
 //****************//
 
@@ -18,33 +16,11 @@ function HomeMain(){
     //Interfaces
     //****************//
 
-interface Image{
-    imagePath: string
-    }
-
-    
-interface Announcement {
-    id: number;
-    title: string;
-    description: string;
-    priceService: number;
-    createdAt: string;
-    images: Image[];
-    userName: string;
-     userPfp: string;
-    typeAnnouncement: number;
-}
-
     //Declarations 
     //****************//
 
 
     const navigate = useNavigate();
-    const pfp = localStorage.getItem("pfp");
-    const token = localStorage.getItem("token");
-    let arr = ['Quer deixar seu mundo mais bonito?', 'Plugins?', 'Que tal uma pesquisa', 'Gosta de criar mods?'];
-    const randomIndex = Math.floor(Math.random() * arr.length);
-    const randomElement = arr[randomIndex];
 
 
     //****************//
@@ -85,38 +61,6 @@ interface Announcement {
         }   
     }
     
-    async function pesquisarAnuncios(strSearch: string) {
-        try {
-            const responseSearch = 
-            axios.get
-            (`https://localhost:7253/api/v1/SearchAn?strSearch=${strSearch}`);
-
-            const data = await (await responseSearch).data;
-
-            const list = document.getElementById('listTitlesSearch');
-
-            if(list){
-                list.innerHTML = '';
-
-                data.forEach((announcement: Announcement) => {
-                const listItem = document.createElement('li');
-                listItem.textContent = announcement.title;
-                list.appendChild(listItem);
-
-                if(strSearch == ''){                    
-                   list.innerHTML = '';
-                }
-
-            });
-            }
-        } 
-        
-        catch (error) {
-            console.log(error);
-        }
-    }
-
-    
     return(
         <div className="appMain">
 
@@ -125,8 +69,8 @@ interface Announcement {
             </head>
 
             <header className="headerHome">
-            <input className="inptSearch" id="inpSearch" type="search" onChange={(e) => pesquisarAnuncios(e.target.value)} placeholder={randomElement}/>
-            <label className="lblSearch" htmlFor="inpSearch"><img width={27} height={27} src={lupa}/></label>
+            
+            <Search/>
 
             <div className="links">
                 <a onClick={overViewPages}>My announcements</a>

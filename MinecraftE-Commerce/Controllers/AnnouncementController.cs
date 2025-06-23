@@ -70,9 +70,9 @@ namespace MinecraftE_Commerce.Controllers
 
         [HttpGet("SearchAn")]
 
-        public async Task<IActionResult> SearchAnnouncement(string strSearch)
+        public async Task<IActionResult> SearchAnnouncement(string? strSearch)
         {
-            if (strSearch == null) return BadRequest("The string is empty");
+            if (string.IsNullOrWhiteSpace(strSearch)) return Ok("");
 
             var announcements = from a in _context.Announcements select a;
 
@@ -83,6 +83,7 @@ namespace MinecraftE_Commerce.Controllers
 
             return Ok(await announcements.ToListAsync());
         }
+
         [HttpGet("GetInRandomOrder")]
         public async Task<IActionResult> ReturnAnnouncementInRandomOrder()
         {
